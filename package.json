@@ -1,0 +1,17 @@
+{
+  "name": "localesrenta",
+  "version": "1.0.0",
+  "description": "Renta de salones \r ## Description\r Este es una pagina de renta de salones donde puedes publicar tu local y alquilarlo para mientras estas de vacaciones \r o puedes TU rentar un local dependiendo de tu moneda economica o tu ubicacion que quieras",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.3"
+  }
+}

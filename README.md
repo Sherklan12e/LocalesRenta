@@ -14,6 +14,12 @@ o puedes TU rentar un local dependiendo de tu moneda economica o tu ubicacion qu
 ```
 pip install -r requirements.txt
 ```
+```
+npm install
+```
+```
+npx tailwindcss -i ./static/css/style.css -o ./static/css/output.css --watch  
+```
 
 ### Executing program
 
