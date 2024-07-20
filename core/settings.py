@@ -74,7 +74,7 @@ DATABASES = {
             'PORT': '3306',
         }
 }
-
+COUNTRIES_FLAG_URL = "flags/{code}.gif"
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
