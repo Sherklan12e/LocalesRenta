@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+import datetime
 
 class Local(models.Model):
     nombre = models.CharField(max_length=255)
@@ -18,8 +19,8 @@ class Local(models.Model):
 class Reserva(models.Model):
     usuario = models.ForeignKey(User,on_delete=models.CASCADE)
     local = models.ForeignKey(Local, on_delete=models.CASCADE ,null=True)
-    dia_comienzo = models.DateField(default=0)
-    final_dia = models.DateField(default=0)
+    dia_comienzo = models.DateField()
+    final_dia = models.DateField()
     totalpagar = models.DecimalField(max_digits=10,decimal_places=2)
 
     def __str__(self):
