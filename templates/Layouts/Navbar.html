@@ -3,7 +3,7 @@
 
 
 <link href="{% static 'css/output.css' %}" rel="stylesheet">
-<nav class="bg-black">
+<nav class="bg-slate-900 text-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
             <div class="flex items-center">
@@ -24,9 +24,9 @@
                 </div>
                 <div class="hidden md:block">
                     <div class="ml-10 flex  items-baseline space-x-4">
-                        <a href="/" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Inicio</a>
-                        <a href="/" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">mapa</a>
-                        <a href="#" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Contacto</a>
+                        <a href="/" class="text-gray-400 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Inicio</a>
+                        <a href="/" class="text-gray-400 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Publicaciones</a>
+                        <a href="#" class="text-gray-400 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Contacto</a>
                     </div>
                     
                 </div>
@@ -42,9 +42,13 @@
                     
                     {% if user.is_authenticated %}
                     <div class="avatar-container">
-                        <img src="{{ user.socialaccount_set.all.0.get_avatar_url }}" width="40" height="40">
+                       <a href="">crear publicacion</a>
                     </div>
-                    <form id="logout-form" method="post" action="{% url 'logout' %}">
+                    <p class="text-white">{{request.user}}</p>
+                    <div class="avatar-container">
+                       
+                    </div>
+                    <form id="logout-form" method="post" action="{% url 'salir' %}">
                         {% csrf_token %}
                         <button type="submit" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Salir</button>
                     </form>
