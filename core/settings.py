@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'login',
     'locales',
     'message',
+    'perfil',
     
     #librerias
     "compressor",
