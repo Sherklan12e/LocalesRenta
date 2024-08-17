@@ -16,6 +16,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# !!! EN PRODUCION PE
+# COMPRESS_ENABLED = True
+# COMPRESS_OFFLINE = True
 
 # Application definition
 
@@ -29,8 +32,17 @@ INSTALLED_APPS = [
     'login',
     'locales',
     'message',
+    
+    #librerias
+    "compressor",
 ]
 
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    # other finders..
+    'compressor.finders.CompressorFinder',
+)
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -94,12 +106,32 @@ USE_TZ = True
 # Directorio para los archivos estáticos
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    BASE_DIR / "static",
+    os.path.join(BASE_DIR / "static"),
+    os.path.join(BASE_DIR / "env/Lib/site-packages/django_countries/static"),
+    os.path.join(BASE_DIR / "env/Lib/site-packages/compressor/tests/static"),
 ]
 
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    # other finders..
+    'compressor.finders.CompressorFinder',
+)
 # Directorio donde Django recogerá todos los archivos estáticos para producción
 STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_STORAGE = 'compressor.storage.CompressorFileStorage'
+COMPRESS_ROOT = os.path.join(BASE_DIR, 'static')
+COMPRESS_URL = STATIC_URL
+COMPRESS_ENABLED = True
+COMPRESS_CSS_HASHING_METHOD = 'content'
+COMPRESS_PRECOMPILERS = (
+    ('text/x-scss', 'django_libsass.SassCompiler'),
+    ('text/x-less', 'lesscpy.lessc LessCompiler'),
+)
 
+# Optional settings
+COMPRESS_OFFLINE = True  # If you want to use offline compression
+COMPRESS_OFFLINE_TIMEOUT = 3600
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
