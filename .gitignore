@@ -13,6 +13,10 @@ develop-eggs/
 dist/
 downloads/
 eggs/
+envv/
+envv
+/envv
+.envv/
 .eggs/
 lib/
 lib64/
