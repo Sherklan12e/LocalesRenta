@@ -1,0 +1,73 @@
+<!-- local_form.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="bg-gray-100">
+    <div class="max-w-4xl mx-auto p-8">
+        <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h2 class="text-2xl font-semibold text-gray-800">Formulario de Alquiler de Local</h2>
+                <p class="text-gray-600">Complete el siguiente formulario para alquilar un local.</p>
+            </div>
+            <form method="post" class="p-6" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Nombre del Local -->
+                    <div>
+                        <label for="nombre" class="block text-gray-700 font-semibold mb-2">Nombre del Local</label>
+                        <input type="text" id="nombre" name="nombre" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+
+                    <!-- Dirección -->
+                    <div>
+                        <label for="direccion" class="block text-gray-700 font-semibold mb-2">Dirección</label>
+                        <input type="text" id="direccion" name="direccion" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+
+                    <!-- Descripción -->
+                    <div class="md:col-span-2">
+                        <label for="descripcion" class="block text-gray-700 font-semibold mb-2">Descripción</label>
+                        <textarea id="descripcion" name="descripcion" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required></textarea>
+                    </div>
+
+                    <!-- Precio por Día -->
+                    <div>
+                        <label for="precio_dia" class="block text-gray-700 font-semibold mb-2">Precio por Día</label>
+                        <input type="number" id="precio_dia" name="precio_dia" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+
+                    <!-- País -->
+                    <div>
+                        <label for="pais" class="block text-gray-700 font-semibold mb-2">País</label>
+                        {{local_form.country}}
+                    </div>
+                   
+
+                    <!-- Disponibilidad -->
+                    <div>
+                        <label for="disponible" class="block text-gray-700 font-semibold mb-2">Disponible</label>
+                        <select id="esta_disponible" name="esta_disponible" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            <option value="true">Sí</option>
+                            <option value="false">No</option>
+                        </select>
+                    </div>
+
+                    <!-- Imagen -->
+                    
+                    <div class="mb-4">
+                        <label for="imagenes" class="block text-gray-700">Imágenes</label>
+                        <input type="file" name="imagenes" id="imagenes" multiple class="w-full p-2 border border-gray-300 rounded-lg">
+                    </div>
+
+                <!-- Botón de Enviar -->
+                <div class="mt-6">
+                    <button type="submit" class="w-full bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">Enviar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+{% comment %} 
+ {% endcomment %}
