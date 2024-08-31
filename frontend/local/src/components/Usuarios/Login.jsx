@@ -7,6 +7,7 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
     const navigate = useNavigate();
+    
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
@@ -16,39 +17,56 @@ const Login = () => {
             });
             localStorage.setItem('access_token', response.data.access);
             localStorage.setItem('refresh_token', response.data.refresh);
-            localStorage.setItem('username', username); 
-            localStorage.setItem('username', credentials.username); // Guarda el nombre de usuario
+            localStorage.setItem('username', username);  // Guarda el nombre de usuario
         // Redirigir o actualizar el estado según sea necesario// Guardar el nombre de usuario
             setMessage('Login successful!');
             navigate('/');
         } catch (error) {
             setMessage('Login failed. Please check your credentials.');
+            console.log(error)
         }
     };
 
     return (
-        <div>
-            <h2>Login</h2>
-            <form onSubmit={handleLogin}>
-                <div>
-                    <label>Username:</label>
-                    <input
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label>Password:</label>
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                </div>
-                <button type="submit">Login</button>
-            </form>
-            {message && <p>{message}</p>}
+        <div className="flex items-center justify-center min-h-screen bg-gray-100 p-6">
+            <div className="w-full max-w-sm bg-white rounded-lg shadow-md p-8">
+                <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+                <form onSubmit={handleLogin}>
+                    <div className="mb-4">
+                        <label htmlFor="username" className="block text-gray-700 font-medium mb-2">Username:</label>
+                        <input
+                            id="username"
+                            type="text"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required
+                        />
+                    </div>
+                    <div className="mb-6">
+                        <label htmlFor="password" className="block text-gray-700 font-medium mb-2">Password:</label>
+                        <input
+                            id="password"
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required
+                        />
+                    </div>
+                    <button
+                        type="submit"
+                        className="w-full px-4 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                        Login
+                    </button>
+                </form>
+                {message && (
+                    <p className={`mt-4 text-center ${message.includes('failed') ? 'text-red-500' : 'text-green-500'}`}>
+                        {message}
+                    </p>
+                )}
+            </div>
         </div>
     );
 };

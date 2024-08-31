@@ -6,9 +6,10 @@ import Home from './mainpage';
 import Navbar from './components/Layouts/Navbar';
 import Footer from './components/Layouts/Footer';
 import Post from './components/post/Post';
+import ListaAlquileres from './components/publicaciones/ListaAlquiler';
 // import PrivateRoute from './PrivateRoute';
 // import ProtectedComponent from './ProtectedComponent';
-
+import CrearPublicacion from './components/publicaciones/CrearAlquiler';
 function App() {
   return (
       <Router>
@@ -18,6 +19,8 @@ function App() {
               <Route path="/register" element={<Register/>} />
               < Route path="/" element={<Home/>} />
               <Route path="/post" element={<Post/>} />
+              <Route path="/publicar" element={<CrearPublicacion/>} />
+              <Route path="/Alquileres" element={<ListaAlquileres/>} />
               {/* <Route path="/protected" element={<PrivateRoute component={ProtectedComponent} />} /> */}
               {/* Define otras rutas aquí */}
           </Routes>

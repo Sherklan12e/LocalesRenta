@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'users',
     'corsheaders',
+    'puplicaciones',
 ]
 
 MIDDLEWARE = [
@@ -109,6 +110,8 @@ SIMPLE_JWT = {
     'BLACKLIST_AFTER_ROTATION': True,
 }
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -118,4 +121,9 @@ REST_FRAMEWORK = {
     ),
 }
 
-
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),  # Duración del token de acceso
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),  # Duración del token de refresco
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+}
