@@ -16,7 +16,11 @@ class AlquilerRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Alquiler.objects.all()
     serializer_class = AlquilerSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+<<<<<<< HEAD
 
+=======
+ 
+>>>>>>> f47f790 (a)
     def perform_update(self, serializer):
         if serializer.instance.user != self.request.user:
             raise PermissionDenied("No tienes permiso para editar esta publicación.")
@@ -30,3 +34,7 @@ class AlquilerListView(generics.ListAPIView):
     queryset = Alquiler.objects.all().order_by('-fecha_publicacion')
     serializer_class = AlquilerSerializer
     permission_classes = [permissions.AllowAny]
+<<<<<<< HEAD
+=======
+    
+>>>>>>> f47f790 (a)

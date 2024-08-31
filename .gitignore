@@ -35,11 +35,22 @@ MANIFEST
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
 *.spec
+<<<<<<< HEAD
 
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
 
+=======
+#env
+__pycache__
+
+.env
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+settings
+>>>>>>> f47f790 (a)
 # Unit test / coverage reports
 htmlcov/
 .tox/
@@ -57,7 +68,12 @@ cover/
 node_modules
 node_modules/
 ./node_modules  
+<<<<<<< HEAD
 # Translations
+=======
+# Translations\
+settings.py
+>>>>>>> f47f790 (a)
 *.mo
 *.pot
 
