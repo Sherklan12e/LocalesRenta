@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { apiRequestWithTokenRefresh } from '../../auth';
-<<<<<<< HEAD
-const CrearAlquiler = () => {
-=======
+
 import { useNavigate } from 'react-router-dom';
 const CrearAlquiler = () => {
     const navigate = useNavigate();
->>>>>>> f47f790 (a)
     const [formData, setFormData] = useState({
         titulo: '',
         descripcion: '',
@@ -57,10 +54,7 @@ const CrearAlquiler = () => {
                 });
             });
             alert('Alquiler publicado con éxito');
-<<<<<<< HEAD
-=======
             navigate('/Alquileres');
->>>>>>> f47f790 (a)
         } catch (error) {
             console.error('Error al crear el alquiler:', error.response ? error.response.data : error);
         }

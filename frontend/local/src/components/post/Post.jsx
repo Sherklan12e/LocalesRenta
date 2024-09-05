@@ -114,7 +114,7 @@ const PostPage = () => {
                             </button>
                         )}
                     </div>
-                    <p className="text-gray-700">{post.content}</p>
+                    <p className="overflow-y-scroll h-20   text-gray-700">{post.content}</p>
                     <em className="text-sm text-gray-500">{new Date(post.created_at).toLocaleString()}</em>
                 </li>
             ))}
