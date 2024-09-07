@@ -25,7 +25,7 @@ const CrearAlquiler = () => {
         piscina: false,
         mascotas_permitidas: false,
         country: '',
-        imagen: null,
+        imagenes: []
     });
 
     const handleChange = (e) => {
@@ -35,10 +35,10 @@ const CrearAlquiler = () => {
                 ...formData,
                 [name]: checked
             });
-        } else if (name === 'imagen') {
+        } else if (name === 'imagenes') {
             setFormData({
                 ...formData,
-                [name]: files[0]
+                imagenes: files
             });
         } else {
             setFormData({
@@ -52,7 +52,13 @@ const CrearAlquiler = () => {
         e.preventDefault();
         const data = new FormData();
         Object.keys(formData).forEach(key => {
-            data.append(key, formData[key]);
+            if (key === 'imagenes') {
+                for (const file of formData[key]) {
+                    data.append('imagenes', file);
+                }
+            } else {
+                data.append(key, formData[key]);
+            }
         });
 
         try {
@@ -73,174 +79,255 @@ const CrearAlquiler = () => {
     };
 
     return (
-        <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-8 mt-10">
-            <h1 className="text-3xl font-bold mb-6 text-center">Crear Nuevo Alquiler</h1>
-            <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-6">
-                <input
-                    type="text"
-                    name="titulo"
-                    value={formData.titulo}
-                    onChange={handleChange}
-                    placeholder="Título"
-                    className="border rounded-md px-4 py-2 w-full"
-                    required
-                />
-                <textarea
-                    name="descripcion"
-                    value={formData.descripcion}
-                    onChange={handleChange}
-                    placeholder="Descripción"
-                    className="border rounded-md px-4 py-2 w-full h-24"
-                    required
-                />
-
-                <div className="grid grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-md">
+            <h2 className="text-2xl font-bold mb-4 text-gray-800">Crear Alquiler</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Campos del formulario */}
+                <div className="flex flex-col">
+                    <label htmlFor="titulo" className="mb-2 text-gray-600 font-semibold">Título</label>
                     <input
+                        id="titulo"
+                        type="text"
+                        name="titulo"
+                        value={formData.titulo}
+                        onChange={handleChange}
+                        placeholder="Título"
+                        className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    />
+                </div>
+                <div className="flex flex-col">
+                    <label htmlFor="descripcion" className="mb-2 text-gray-600 font-semibold">Descripción</label>
+                    <textarea
+                        id="descripcion"
+                        name="descripcion"
+                        value={formData.descripcion}
+                        onChange={handleChange}
+                        placeholder="Descripción"
+                        className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 h-32 resize-none"
+                    />
+                </div>
+                <div className="flex flex-col">
+                    <label htmlFor="precio" className="mb-2 text-gray-600 font-semibold">Precio</label>
+                    <input
+                        id="precio"
                         type="number"
                         name="precio"
                         value={formData.precio}
                         onChange={handleChange}
                         placeholder="Precio"
-                        className="border rounded-md px-4 py-2 w-full"
-                        required
+                        className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
+                </div>
+                <div className="flex flex-col">
+                    <label htmlFor="ubicacion" className="mb-2 text-gray-600 font-semibold">Ubicación</label>
                     <input
+                        id="ubicacion"
                         type="text"
                         name="ubicacion"
                         value={formData.ubicacion}
                         onChange={handleChange}
                         placeholder="Ubicación"
-                        className="border rounded-md px-4 py-2 w-full"
-                        required
+                        className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                 </div>
-
-                <div className="grid grid-cols-3 gap-4">
+                <div className="flex flex-col">
+                    <label htmlFor="superficie" className="mb-2 text-gray-600 font-semibold">Superficie (m²)</label>
                     <input
+                        id="superficie"
                         type="number"
                         name="superficie"
                         value={formData.superficie}
                         onChange={handleChange}
                         placeholder="Superficie (m²)"
-                        className="border rounded-md px-4 py-2 w-full"
-                        required
+                        className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
+                </div>
+                <div className="flex flex-col">
+                    <label htmlFor="num_habitaciones" className="mb-2 text-gray-600 font-semibold">Número de habitaciones</label>
                     <input
+                        id="num_habitaciones"
                         type="number"
                         name="num_habitaciones"
                         value={formData.num_habitaciones}
                         onChange={handleChange}
-                        placeholder="Habitaciones"
-                        className="border rounded-md px-4 py-2 w-full"
-                        required
+                        placeholder="Número de habitaciones"
+                        className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
+                </div>
+                <div className="flex flex-col">
+                    <label htmlFor="num_banos" className="mb-2 text-gray-600 font-semibold">Número de baños</label>
                     <input
+                        id="num_banos"
                         type="number"
                         name="num_banos"
                         value={formData.num_banos}
                         onChange={handleChange}
-                        placeholder="Baños"
-                        className="border rounded-md px-4 py-2 w-full"
-                        required
+                        placeholder="Número de baños"
+                        className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                 </div>
-
-                <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col">
+                    <label htmlFor="num_garajes" className="mb-2 text-gray-600 font-semibold">Número de garajes</label>
                     <input
+                        id="num_garajes"
                         type="number"
                         name="num_garajes"
                         value={formData.num_garajes}
                         onChange={handleChange}
-                        placeholder="Garajes"
-                        className="border rounded-md px-4 py-2 w-full"
+                        placeholder="Número de garajes"
+                        className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
+                </div>
+                <div className="col-span-2 flex flex-col space-y-2">
+                    <label className="text-gray-600 font-semibold">Características</label>
+                    <div className="flex items-center space-x-4">
+                        <label className="flex items-center">
+                            <input
+                                type="checkbox"
+                                name="tiene_balcon"
+                                checked={formData.tiene_balcon}
+                                onChange={handleChange}
+                                className="form-checkbox h-5 w-5 text-indigo-600"
+                            />
+                            <span className="ml-2 text-gray-700">Tiene balcón</span>
+                        </label>
+                        <label className="flex items-center">
+                            <input
+                                type="checkbox"
+                                name="tiene_patio"
+                                checked={formData.tiene_patio}
+                                onChange={handleChange}
+                                className="form-checkbox h-5 w-5 text-indigo-600"
+                            />
+                            <span className="ml-2 text-gray-700">Tiene patio</span>
+                        </label>
+                        <label className="flex items-center">
+                            <input
+                                type="checkbox"
+                                name="amueblado"
+                                checked={formData.amueblado}
+                                onChange={handleChange}
+                                className="form-checkbox h-5 w-5 text-indigo-600"
+                            />
+                            <span className="ml-2 text-gray-700">Amueblado</span>
+                        </label>
+                    </div>
+                </div>
+                <div className="flex flex-col">
+                    <label htmlFor="ano_construccion" className="mb-2 text-gray-600 font-semibold">Año de construcción</label>
                     <input
+                        id="ano_construccion"
                         type="number"
                         name="ano_construccion"
                         value={formData.ano_construccion}
                         onChange={handleChange}
                         placeholder="Año de construcción"
-                        className="border rounded-md px-4 py-2 w-full"
+                        className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                 </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                    <label className="flex items-center">
-                        <input
-                            type="checkbox"
-                            name="tiene_balcon"
-                            checked={formData.tiene_balcon}
-                            onChange={handleChange}
-                            className="mr-2"
-                        />
-                        Tiene Balcón
-                    </label>
-                    <label className="flex items-center">
-                        <input
-                            type="checkbox"
-                            name="tiene_patio"
-                            checked={formData.tiene_patio}
-                            onChange={handleChange}
-                            className="mr-2"
-                        />
-                        Tiene Patio
-                    </label>
-                    <label className="flex items-center">
-                        <input
-                            type="checkbox"
-                            name="amueblado"
-                            checked={formData.amueblado}
-                            onChange={handleChange}
-                            className="mr-2"
-                        />
-                        Amueblado
-                    </label>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
+                <div className="flex flex-col">
+                    <label htmlFor="tipo_propiedad" className="mb-2 text-gray-600 font-semibold">Tipo de propiedad</label>
                     <select
+                        id="tipo_propiedad"
                         name="tipo_propiedad"
                         value={formData.tipo_propiedad}
                         onChange={handleChange}
-                        className="border rounded-md px-4 py-2 w-full"
+                        className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     >
-                        <option value="">Tipo de propiedad</option>
                         <option value="casa">Casa</option>
                         <option value="departamento">Departamento</option>
                         <option value="chalet">Chalet</option>
                         <option value="duplex">Dúplex</option>
                         <option value="piso">Piso</option>
                     </select>
-
-                    <select
+                </div>
+                <div className="col-span-2 flex flex-col space-y-2">
+                    <label className="text-gray-600 font-semibold">Servicios adicionales</label>
+                    <div className="flex items-center space-x-4">
+                        <label className="flex items-center">
+                            <input
+                                type="checkbox"
+                                name="wifi"
+                                checked={formData.wifi}
+                                onChange={handleChange}
+                                className="form-checkbox h-5 w-5 text-indigo-600"
+                            />
+                            <span className="ml-2 text-gray-700">Wi-Fi disponible</span>
+                        </label>
+                        <label className="flex items-center">
+                            <input
+                                type="checkbox"
+                                name="calefaccion"
+                                checked={formData.calefaccion}
+                                onChange={handleChange}
+                                className="form-checkbox h-5 w-5 text-indigo-600"
+                            />
+                            <span className="ml-2 text-gray-700">Calefacción</span>
+                        </label>
+                        <label className="flex items-center">
+                            <input
+                                type="checkbox"
+                                name="aire_acondicionado"
+                                checked={formData.aire_acondicionado}
+                                onChange={handleChange}
+                                className="form-checkbox h-5 w-5 text-indigo-600"
+                            />
+                            <span className="ml-2 text-gray-700">Aire acondicionado</span>
+                        </label>
+                        <label className="flex items-center">
+                            <input
+                                type="checkbox"
+                                name="piscina"
+                                checked={formData.piscina}
+                                onChange={handleChange}
+                                className="form-checkbox h-5 w-5 text-indigo-600"
+                            />
+                            <span className="ml-2 text-gray-700">Piscina</span>
+                        </label>
+                        <label className="flex items-center">
+                            <input
+                                type="checkbox"
+                                name="mascotas_permitidas"
+                                checked={formData.mascotas_permitidas}
+                                onChange={handleChange}
+                                className="form-checkbox h-5 w-5 text-indigo-600"
+                            />
+                            <span className="ml-2 text-gray-700">Mascotas permitidas</span>
+                        </label>
+                    </div>
+                </div>
+                <div className="flex flex-col">
+                    <label htmlFor="country" className="mb-2 text-gray-600 font-semibold">País</label>
+                    <input
+                        id="country"
+                        type="text"
                         name="country"
                         value={formData.country}
                         onChange={handleChange}
-                        className="border rounded-md px-4 py-2 w-full"
-                        required
-                    >
-                        <option value="">Selecciona un país</option>
-                        <option value="AR">Argentina</option>
-                        <option value="BR">Brasil</option>
-                        <option value="CL">Chile</option>
-                    </select>
+                        placeholder="País"
+                        className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    />
                 </div>
+                <div className="flex flex-col">
+                    <label htmlFor="imagenes" className="mb-2 text-gray-600 font-semibold">Imágenes</label>
+                    <input
+                        id="imagenes"
+                        type="file"
+                        name="imagenes"
+                        multiple
+                        onChange={handleChange}
+                        className="p-2 border border-gray-300 rounded-lg focus:outline-none"
+                    />
+                </div>
+            </div>
+            <button
+                type="submit"
+                className="mt-6 py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+                Publicar alquiler
+            </button>
+        </form>
 
-                <input
-                    type="file"
-                    name="imagen"
-                    onChange={handleChange}
-                    className="border rounded-md px-4 py-2 w-full"
-                />
-
-                <button
-                    type="submit"
-                    className="bg-blue-500 text-white py-2 px-4 rounded-md w-full hover:bg-blue-600"
-                >
-                    Crear Alquiler
-                </button>
-            </form>
-        </div>
     );
 };
 
