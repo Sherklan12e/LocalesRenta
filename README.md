@@ -32,27 +32,56 @@ Este es un ejemplo de como paso a paso podemos usar el trabajo que hicimos
 * npm
 * python , pip
 
-### Installation
+### Instalacion
 
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
+_Ejemplo de instalacion._
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
+1. Clone the repo
    ```sh
-   git clone https://github.com/github_username/repo_name.git
+   git clone https://github.com/Sherklan12e/LocalesRenta.git
+   ```
+2. Entrar alas carpetas
+   ```sh
+   cd LocalesRenta
+   ```
+   despues
+   ```sh
+   cd frontend
+   ```
+   despues
+     ```sh
+   cd local
    ```
 3. Install NPM packages
    ```sh
-   npm install
+   npm i 
    ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
-5. Change git remote url to avoid accidental pushes to base project
+4. correr
    ```sh
-   git remote set-url origin github_username/repo_name
-   git remote -v # confirm the changes
+   npm run dev
+   ```
+
+DJango
+
+2. Entrar alas carpetas
+   ```sh
+   cd  prueba
+   ```
+   despues
+   ```sh
+   pip install -r requirements.txt
+   ```
+   despues
+     ```sh
+   cd local
+   ```
+3. Install NPM packages
+   ```sh
+   npm i 
+   ```
+4. correr
+   ```sh
+   npm run dev
    ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
