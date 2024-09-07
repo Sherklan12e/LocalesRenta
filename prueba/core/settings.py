@@ -2,6 +2,7 @@ import os
 from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv
+from corsheaders.defaults import default_headers
 
 load_dotenv()
 
@@ -46,13 +47,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
+    'http://localhost:5173',
 ]
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:5173',
     'http://127.0.0.1:8000',
     'http://localhost:8000',
-    'https://www.dropbox.com',
 ]
 CORS_ALLOW_METHODS = [
     'DELETE',
@@ -68,6 +68,11 @@ CORS_ALLOW_HEADERS = [
     'accept',
     'X-CSRFToken',
 ]
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'Authorization',
+]
+
+CORS_ALLOW_CREDENTIALS = True
 
 CSRF_COOKIE_SECURE = False
 SESSION_COOKIE_SECURE = False

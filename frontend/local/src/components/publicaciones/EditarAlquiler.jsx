@@ -6,7 +6,8 @@ const EditarAlquiler = () => {
     const getCsrfToken = () => {
         const cookie = document.cookie.split('; ').find(row => row.startsWith('csrftoken='));
         return cookie ? cookie.split('=')[1] : null;
-      };
+    };
+    
     const [alquiler, setAlquiler] = useState(null);
     const [formData, setFormData] = useState({
         titulo: '',
@@ -82,25 +83,25 @@ const EditarAlquiler = () => {
 
         fetchAlquiler();
     }, [id, token]);
-    const handleEliminarImagen = async (imageUrl) => {
+    
+    
+    const eliminarImagen = async (imageId) => {
+        const csrfToken = getCsrfToken();
+        const token = localStorage.getItem('access_token');
         try {
-            const csrfToken = getCsrfToken();
-            await axios.post(`/alquiler/imagenes/${imageUrl}/delete_image/`, {}, {
+            await axios.delete(`http://127.0.0.1:8000/alquiler/eliminar-imagen/${imageId}/`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
-                    'X-CSRFToken': csrfToken
+                    'X-CSRFToken': csrfToken // Incluye el token CSRF en la cabecera
                 }
             });
-            setFormData(prevFormData => ({
-                ...prevFormData,
-                imagenes: prevFormData.imagenes.filter(img => img !== imageUrl)
-            }));
+            alert('Imagen eliminada correctamente');
+            // Puedes actualizar el estado de imágenes o redirigir después de eliminar
         } catch (error) {
             console.error('Error al eliminar la imagen:', error);
+            alert('Error al eliminar la imagen');
         }
     };
-    
-    
     
     
     
@@ -141,7 +142,7 @@ const EditarAlquiler = () => {
                 data.append(key, formData[key]);
             }
         });
-
+    
         try {
             await axios.put(`http://127.0.0.1:8000/alquiler/alquileres/${id}/`, data, {
                 headers: {
@@ -154,9 +155,8 @@ const EditarAlquiler = () => {
             console.error('Error al actualizar la publicación:', error);
         }
     };
-    
     if (!alquiler) return <p>Cargando...</p>;
-
+   
     return (
         <div className="container mx-auto px-4">
             <h2 className="text-2xl font-bold mb-4">Editar Publicación</h2>
@@ -358,7 +358,7 @@ const EditarAlquiler = () => {
                             @csrf_protect
                             <button
                                 type="button"
-                                onClick={() => handleEliminarImagen(url)}
+                                onClick={() => eliminarImagen(url)}
                                 className="absolute top-0 right-0 bg-red-500 text-white p-1 rounded"
                             >
                                 Eliminar

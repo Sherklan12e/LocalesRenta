@@ -68,4 +68,27 @@ class AlquilerListView(generics.ListAPIView):
 from django.http import JsonResponse
 
 
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
+from django.views.decorators.csrf import csrf_exempt
+@csrf_exempt
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_image(request, image_id):
+    try:
+        imagen = ImagenAlquiler.objects.get(id=image_id)
+        image_url = imagen.image_url
+        # Crea una instancia del servicio Dropbox
+        dropbox_service = DropboxService(access_token="tu_access_token")
+        # Elimina la imagen en Dropbox
+        result = dropbox_service.delete_file(image_url)
 
+        if result:
+            # Elimina la imagen de la base de datos
+            imagen.delete()
+            return Response({"message": "Imagen eliminada exitosamente"}, status=200)
+        else:
+            return Response({"error": "Error al eliminar la imagen"}, status=500)
+    except ImagenAlquiler.DoesNotExist:
+        return Response({"error": "Imagen no encontrada"}, status=404)

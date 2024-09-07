@@ -22,13 +22,20 @@ class DropboxService:
                 raise e
         return link.url.replace('?dl=0', '?raw=1')
 
-    def delete_image(self, path):
+    def delete_file(self, url):
+        # Extraer el path de la URL
+        path = self._extract_path_from_url(url)
         try:
-            self.client.files_delete_v2(path)
-        except dropbox.exceptions.ApiError as e:
-            print(f"Error deleting file: {e}")
+            self.dbx.files_delete_v2(path)
+            return True
+        except Exception as e:
+            print(f"Error al eliminar el archivo: {e}")
+            return False
 
-    def _generate_unique_path(self, path):
-        file_name, file_extension = path.rsplit('.', 1)
-        unique_id = str(uuid.uuid4())
-        return f"{file_name}_{unique_id}.{file_extension}"
+    def _extract_path_from_url(self, url):
+        # Asumimos que la URL tiene la estructura de Dropbox y extraemos el path
+        # Esta es una forma simplificada. Dependiendo de cómo está construida tu URL, puede necesitar ajustes.
+        from urllib.parse import urlparse, parse_qs
+        parsed_url = urlparse(url)
+        path = parsed_url.path
+        return path
