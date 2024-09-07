@@ -1,22 +1,27 @@
-import time
 import dropbox
-from dropbox.exceptions import ApiError, AuthError
+from django.conf import settings
 
 class DropboxService:
-    def __init__(self, access_token):
-        self.client = dropbox.Dropbox(access_token)
+    def __init__(self):
+        self.client = dropbox.Dropbox(settings.DROPBOX_ACCESS_TOKEN)
 
     def upload_image(self, file, path):
-        max_retries = 3
-        for attempt in range(max_retries):
-            try:
-                return self.client.files_upload(file.read(), path)
-            except (ApiError, AuthError) as e:
-                print(f"Dropbox API error: {e}")
-                if attempt < max_retries - 1:
-                    time.sleep(2)  # Wait before retrying
-                else:
-                    raise
-            except Exception as e:
-                print(f"Unexpected error: {e}")
-                raise
+        # Upload the file
+        self.client.files_upload(file.read(), path)
+
+        # Check if a shared link already exists
+        try:
+            links = self.client.sharing_list_shared_links(path=path).links
+            if links:
+                link = links[0]
+            else:
+                link = self.client.sharing_create_shared_link_with_settings(path)
+        except dropbox.exceptions.ApiError as e:
+            # Handle the specific case of shared link already existing
+            if isinstance(e.error, dropbox.sharing.CreateSharedLinkWithSettingsError) and e.error.is_shared_link_already_exists():
+                link = self.client.sharing_list_shared_links(path=path).links[0]
+            else:
+                raise e
+
+        # Return the direct URL
+        return link.url.replace('?dl=0', '?raw=1')
