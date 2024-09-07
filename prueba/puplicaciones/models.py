@@ -1,9 +1,6 @@
-# models.py
-
 from django.db import models
 from django.contrib.auth.models import User
 from django_countries.fields import CountryField
-from .services import DropboxService
 
 class Alquiler(models.Model):
     titulo = models.CharField(max_length=255)
@@ -46,13 +43,7 @@ class Alquiler(models.Model):
 
 class ImagenAlquiler(models.Model):
     alquiler = models.ForeignKey(Alquiler, related_name='imagenes', on_delete=models.CASCADE)
-    imagen = models.ImageField(upload_to='alquileres/')
-    image_url = models.URLField(blank=True, null=True)  # URL de la imagen en Dropbox
-    
-    def save(self, *args, **kwargs):
-        # Si hay imagen y no hay URL, sube la imagen a Dropbox
-        if self.imagen and not self.image_url:
-            service = DropboxService()
-            path = f'/alquileres/{self.imagen.name}'
-            self.image_url = service.upload_image(self.imagen, path)
-        super().save(*args, **kwargs)
+    imagen = models.ImageField(upload_to='alquileres/')  # Guardar imágenes localmente
+
+    def __str__(self):
+        return f'Imagen de {self.alquiler.titulo}'

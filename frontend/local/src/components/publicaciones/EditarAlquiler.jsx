@@ -85,23 +85,27 @@ const EditarAlquiler = () => {
     }, [id, token]);
     
     
-    const eliminarImagen = async (imageId) => {
+    const eliminarImagen = async (id) => {
         const csrfToken = getCsrfToken();
         const token = localStorage.getItem('access_token');
         try {
-            await axios.delete(`http://127.0.0.1:8000/alquiler/eliminar-imagen/${imageId}/`, {
+            await axios.post(`http://127.0.0.1:8000/alquiler/imagenes/${id}/delete_image/`, null, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
-                    'X-CSRFToken': csrfToken // Incluye el token CSRF en la cabecera
+                    'X-CSRFToken': csrfToken
                 }
             });
+            setFormData(prevData => ({
+                ...prevData,
+                imagenes: prevData.imagenes.filter(img => img.id !== id) // Filtra la imagen eliminada
+            }));
             alert('Imagen eliminada correctamente');
-            // Puedes actualizar el estado de imágenes o redirigir después de eliminar
         } catch (error) {
             console.error('Error al eliminar la imagen:', error);
             alert('Error al eliminar la imagen');
         }
     };
+    
     
     
     
@@ -358,7 +362,7 @@ const EditarAlquiler = () => {
                             @csrf_protect
                             <button
                                 type="button"
-                                onClick={() => eliminarImagen(url)}
+                                onClick={() => url}
                                 className="absolute top-0 right-0 bg-red-500 text-white p-1 rounded"
                             >
                                 Eliminar

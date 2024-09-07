@@ -62,7 +62,7 @@ const ListaAlquileres = () => {
                             {alquiler.imagenes && alquiler.imagenes.length > 0 ? (
                                 <img
                                     className="w-full h-48 object-cover"
-                                    src={modificarEnlace(alquiler.imagenes[0].image_url)} // Asumiendo que tomas la primera imagen
+                                    src={alquiler.imagenes[0].imagen} // Asumiendo que tomas la primera imagen
                                     alt={alquiler.titulo}
                                 />
                             ) : (
