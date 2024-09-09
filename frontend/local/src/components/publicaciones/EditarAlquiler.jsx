@@ -3,11 +3,7 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const EditarAlquiler = () => {
-    const getCsrfToken = () => {
-        const cookie = document.cookie.split('; ').find(row => row.startsWith('csrftoken='));
-        return cookie ? cookie.split('=')[1] : null;
-    };
-    
+
     const [alquiler, setAlquiler] = useState(null);
     const [formData, setFormData] = useState({
         titulo: '',
@@ -29,18 +25,12 @@ const EditarAlquiler = () => {
         piscina: false,
         mascotas_permitidas: false,
         country: '',
-        imagenes: []
+        imagenes: [],  // Lista de imágenes actuales
+        eliminarImagenes: [] 
     });
     const { id } = useParams();
     const navigate = useNavigate();
     const token = localStorage.getItem('access_token');
-
-    const modificarEnlace = (enlace) => {
-        if (enlace && enlace.endsWith('0')) {
-            return enlace.slice(0, -1) + '1';
-        }
-        return enlace;
-    };
 
     useEffect(() => {
         const fetchAlquiler = async () => {
@@ -73,7 +63,7 @@ const EditarAlquiler = () => {
                     piscina: response.data.piscina,
                     mascotas_permitidas: response.data.mascotas_permitidas,
                     country: response.data.country,
-                    imagenes: alquilerData.imagenes.map(img => img.image_url) // Si quieres manejar imágenes, puedes añadir la lógica aquí
+                    imagenes: alquilerData.imagenes.map(img => img.imagen) // Si quieres manejar imágenes, puedes añadir la lógica aquí
                     
                 });
             } catch (error) {
@@ -84,27 +74,25 @@ const EditarAlquiler = () => {
         fetchAlquiler();
     }, [id, token]);
     
-    
-    const eliminarImagen = async (id) => {
-        const csrfToken = getCsrfToken();
-        const token = localStorage.getItem('access_token');
-        try {
-            await axios.post(`http://127.0.0.1:8000/alquiler/imagenes/${id}/delete_image/`, null, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'X-CSRFToken': csrfToken
-                }
-            });
-            setFormData(prevData => ({
-                ...prevData,
-                imagenes: prevData.imagenes.filter(img => img.id !== id) // Filtra la imagen eliminada
+    const handleRemoveImage = (index) => {
+        const updatedImages = [...formData.imagenes];
+        const imageToRemove = updatedImages.splice(index, 1)[0];
+        
+        // Si la imagen tiene un ID, se añade a la lista de imágenes a eliminar
+        if (imageToRemove.id) {
+            setFormData(prevState => ({
+                ...prevState,
+                eliminarImagenes: [...(prevState.eliminarImagenes || []), imageToRemove.id]
             }));
-            alert('Imagen eliminada correctamente');
-        } catch (error) {
-            console.error('Error al eliminar la imagen:', error);
-            alert('Error al eliminar la imagen');
         }
+        
+        // Actualiza el estado
+        setFormData(prevState => ({
+            ...prevState,
+            imagenes: updatedImages
+        }));
     };
+    
     
     
     
@@ -141,7 +129,7 @@ const EditarAlquiler = () => {
                     data.append('imagenes', file);
                 }
             } else if (key === 'eliminarImagenes') {
-                data.append('eliminar_imagenes', JSON.stringify(formData[key])); // Convertir a JSON para el backend
+                data.append('eliminar_imagenes', JSON.stringify(formData[key])); // Convertir a JSON
             } else {
                 data.append(key, formData[key]);
             }
@@ -154,7 +142,7 @@ const EditarAlquiler = () => {
                     'Content-Type': 'multipart/form-data',
                 }
             });
-            navigate('/Alquileres'); // Redirige a la lista de alquileres después de guardar
+            navigate('/Alquileres');
         } catch (error) {
             console.error('Error al actualizar la publicación:', error);
         }
@@ -345,7 +333,7 @@ const EditarAlquiler = () => {
                     />
                 </div>
                 <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2">Imagenes</label>
+                    <label className="block text-gray-700 text-sm font-bold mb-2">Imágenes</label>
                     <input
                         type="file"
                         name="imagenes"
@@ -353,23 +341,16 @@ const EditarAlquiler = () => {
                         multiple
                         className="form-input mt-1 block w-full"
                     />
-                </div>
-                <label className="block text-gray-700 text-sm font-bold mb-2">Imágenes Actuales</label>
-                <div className="flex flex-wrap">
-                    {formData.imagenes.map((url, index) => (
-                        <div key={index} className="relative">
-                            <img src={modificarEnlace(url)} alt={`Imagen ${index}`} className="w-32 h-32 object-cover mr-2 mb-2" />
-                            @csrf_protect
-                            <button
-                                type="button"
-                                onClick={() => url}
-                                className="absolute top-0 right-0 bg-red-500 text-white p-1 rounded"
-                            >
+                    {formData.imagenes.map((imagen, index) => (
+                        <div key={index} className="mb-4">
+                            <img src={imagen} alt={`Imagen ${index + 1}`} className="h-24 w-24 object-cover" />
+                            <button type="button" onClick={() => handleRemoveImage(index)} className="ml-2 p-2 bg-red-500 text-white">
                                 Eliminar
                             </button>
                         </div>
                     ))}
                 </div>
+
                 <button
                     type="submit"
                     className="bg-blue-500 text-white py-2 px-4 rounded"

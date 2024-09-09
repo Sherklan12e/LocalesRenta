@@ -24,8 +24,8 @@ const Navbar = () => {
                 </a>
                 <div className="hidden md:flex space-x-6">
                     <a href="/" className="hover:underline">Inicio</a>
-                    <a href="/about" className="hover:underline">Nosotros</a>
-                    <a href="/contact" className="hover:underline">Contacto</a>
+                    <a href="/publicar" className="hover:underline">publicar</a>
+                    <a href="/alquileres" className="hover:underline">Alquileres</a>
                         {username ? (
                             <>
                                 <a href='/'> {username}</a>

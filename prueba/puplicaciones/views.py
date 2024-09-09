@@ -34,21 +34,32 @@ class AlquilerCreateView(generics.ListCreateAPIView):
         imagenes = self.request.FILES.getlist('imagenes')
         
 
+
 class AlquilerRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Alquiler.objects.all()
     serializer_class = AlquilerSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def perform_update(self, serializer):
-        if serializer.instance.user != self.request.user:
-            raise PermissionDenied("No tienes permiso para editar esta publicación.")
         alquiler = serializer.save()
 
-        # Solo añadir nuevas imágenes
-        imagenes = self.request.FILES.getlist('imagenes')
-        if imagenes:
-            for imagen in imagenes:
-                ImagenAlquiler.objects.create(alquiler=alquiler, imagen=imagen)
+        # Eliminar imágenes si el usuario lo ha solicitado
+        eliminar_imagenes = self.request.data.get('eliminar_imagenes')
+        if eliminar_imagenes:
+            eliminar_imagenes = json.loads(eliminar_imagenes)
+            for imagen_id in eliminar_imagenes:
+                try:
+                    imagen = ImagenAlquiler.objects.get(id=imagen_id)
+                    imagen.imagen.delete(save=False)  # Borra el archivo físico
+                    imagen.delete()  # Borra el registro de la base de datos
+                except ImagenAlquiler.DoesNotExist:
+                    continue
+
+        # Agregar nuevas imágenes
+        nuevas_imagenes = self.request.FILES.getlist('imagenes')
+        for nueva_imagen in nuevas_imagenes:
+            ImagenAlquiler.objects.create(alquiler=alquiler, imagen=nueva_imagen)
+
 
     def perform_destroy(self, instance):
         if instance.user != self.request.user:
