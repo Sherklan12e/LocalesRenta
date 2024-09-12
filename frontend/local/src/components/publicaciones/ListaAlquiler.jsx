@@ -7,13 +7,7 @@ const ListaAlquileres = () => {
     const navigate = useNavigate();
     const token = localStorage.getItem('access_token');
 
-    const modificarEnlace = (enlace) => {
-        if (enlace && enlace.endsWith('0')) {
-            return enlace.slice(0, -1) + '1';
-        }
-        return enlace;
-    };
-
+ 
     useEffect(() => {
         const fetchAlquileres = async () => {
             try {
