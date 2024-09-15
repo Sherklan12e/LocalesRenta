@@ -85,7 +85,7 @@ const EditarAlquiler = () => {
                 eliminarImagenes: [...(prevState.eliminarImagenes || []), imageToRemove.id]
             }));
         }
-        
+        // WTF no se borra ptmr
         // Actualiza el estado
         setFormData(prevState => ({
             ...prevState,
