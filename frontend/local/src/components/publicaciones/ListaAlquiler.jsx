@@ -110,7 +110,7 @@ const ListaAlquileres = () => {
                     <div className="bg-white rounded-lg shadow-lg w-80 p-6">
                         <h3 className="text-lg font-bold mb-4">Opciones</h3>
                         <div className="mt-4 flex justify-between">
-                            {console.log(selectedAlquiler.user_id === userId)}
+                            {console.log(selectedAlquiler.user_id === id)}
                             {console.log(selectedAlquiler.id)}
                             {console.log("======")}
                             {console.log(id, "a")}

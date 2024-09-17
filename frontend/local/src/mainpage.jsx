@@ -47,12 +47,13 @@ const MainPage = () => {
       {/* Sección de propiedades */}
       <div className="max-w-6xl mx-auto mt-12 p-4">
         <h2 className="text-2xl md:text-3xl font-bold mb-6">Propiedades destacadas</h2>
-
+``
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {alquileres.map(alquiler => (
+            
             <div key={alquiler.id} className="bg-white shadow-lg rounded-lg overflow-hidden">
               <img
-                src={alquiler.imagenes[0] ? alquiler.imagenes[0].imagen : 'https://via.placeholder.com/420x280'}
+                src={alquiler.imagenes[0].imagen ? alquiler.imagenes[0].imagen : 'https://via.placeholder.com/420x280'}
                 alt={alquiler.titulo}
                 className="w-full h-56 object-cover"
               />

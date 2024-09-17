@@ -19,8 +19,8 @@ const Login = () => {
             localStorage.setItem('access_token', response.data.access);
             localStorage.setItem('refresh_token', response.data.refresh);
             localStorage.setItem('username', username);
-            localStorage.setItem('id', response.data.id); // Guarda el nombre de usuario
-        // Redirigir o actualizar el estado según sea necesario// Guardar el nombre de usuario
+            localStorage.setItem('id', response.data.id);
+            
             setMessage('Login successful!');
             navigate('/');
         } catch (error) {
