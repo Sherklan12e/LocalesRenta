@@ -27,7 +27,7 @@ function App() {
         <Route path="/Alquileres" element={<ListaAlquileres />} />
         <Route path="/editar-alquiler/:id" element={<EditarAlquiler />} />
         <Route path="/detalle-alquiler/:id" element={<DetalleAlquiler />} />
-        <Route path="/p" element={<Profile/>} />
+        <Route path="/profile/:username" element={<Profile />} />
         <Route path="/edi" element={<EditProfile/>} />
         {/* Define otras rutas aquí */}
       </Routes>

@@ -1,39 +1,50 @@
-// Profile.js
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
-const Profile = () => {
-    const [profileData, setProfileData] = useState({
-        username: '',
-        email: '',
-        bio: '',
-        profile_picture: '',
-        location: ''
-    });
-    console.log("a")
+function Profile() {
+    const { username } = useParams(); // Obtener el username de la URL
+    const [profile, setProfile] = useState(null); // Estado para almacenar los datos del perfil
+
     useEffect(() => {
-        axios.get('http://127.0.0.1:8000/api/profile/', {
+        const token = localStorage.getItem('access_token');
+        if (!token) {
+            console.error('No token found, please log in.');
+            return;
+        }
+
+        axios.get(`http://127.0.0.1:8000/api/profile/${username}/`, {
             headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`  // Usando JWT
+                'Authorization': `Bearer ${token}`
             }
         })
-        .then(response => {
-            setProfileData(response.data);
-        })
-        .catch(error => {
-            console.error('There was an error fetching the profile!', error);
-        });
-    }, []);
+            .then(response => {
+                setProfile(response.data);
+            })
+            .catch(error => {
+                console.error('Error fetching profile data:', error);
+            });
+    }, [username]);
+
+
+    if (!profile) {
+        return <div>Loading...</div>; // Mostrar un mensaje de carga mientras se obtienen los datos
+    }
 
     return (
+        
         <div>
-            <h1 className="m-5" >{profileData.user}'s Profile</h1>
-            <p>Email: {profileData.email}</p>
-            <p>Bio: {profileData.bio}</p>
-            <p>Location: {profileData.location}</p>
-            {profileData.profile_picture && <img src={profileData.profile_picture} alt="Profile" />}
+            {console.log(profile)}  
+            <h1>{profile.username}    </h1>
+            <h1>{profile.id}    </h1>
+            <p>Email: {profile.email}</p>
+            <p>Bio: {profile.bio}</p>
+            <p>Location: {profile.location}</p>
+            {profile.profile_picture && <img src={profile.profile_picture} alt="Profile" />}
         </div>
     );
 }
 
 export default Profile;
+
+
