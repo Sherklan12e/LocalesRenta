@@ -15,8 +15,11 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     username = models.CharField(max_length=255 ,blank=True, null=True)
     bio = models.TextField(blank=True, null=True)
-    profile_picture = models.ImageField(upload_to='profile_perfil/', blank=True, null=True)
+    profile_picture = models.ImageField(upload_to='profile_perfil/', default='juan.jpg' ,blank=True, null=True)
     location = models.CharField(max_length=100, blank=True, null=True)
-
+    def save(self, *args, **kwargs):
+        if self.user and not self.username:
+            self.username = self.user.username
+        super().save(*args, **kwargs)
     def __str__(self):
         return self.user.username

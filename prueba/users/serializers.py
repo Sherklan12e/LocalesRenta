@@ -30,9 +30,8 @@ class PostSerializer(serializers.ModelSerializer):
         return obj.user.username
 
 class ProfileSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(source='user.user', read_only=True)
     email = serializers.EmailField(source='user.email', read_only=True)
 
     class Meta:
         model = Profile
-        fields = ['username', 'email', 'bio', 'profile_picture', 'location']
+        fields = ['id','username', 'email', 'bio', 'profile_picture', 'location']
