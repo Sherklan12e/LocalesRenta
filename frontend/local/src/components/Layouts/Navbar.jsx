@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai"; 
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -6,11 +7,34 @@ const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [isProfileMenuOpen, setProfileMenuOpen] = useState(false);
     const username = localStorage.getItem('username');
+    const [profile, setProfile] = useState(null);
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState("");
     const toggleMenu = () => {
         setIsOpen(!isOpen);
     };
+
+    useEffect(() => {
+        const token = localStorage.getItem('access_token');
+        if (!token){
+            console.error("Token no encontrada perra , por favor logeate");
+            return;
+        }
+        axios.get(`http://127.0.0.1:8000/api/profile/${username}/`,{
+            headers: {
+                'Authorization' : `Bearer ${token}`
+            }
+        })
+        .then (response => {
+            console.log("El perfil", response.data);
+            setProfile(response.data);
+        }) 
+        .catch(error => {
+            console.log('error al perdir fecht', error)
+            setProfile(null)
+        });
+
+    }, [username])
 
     const toggleProfileMenu = () => {
         setProfileMenuOpen(!isProfileMenuOpen);
@@ -20,6 +44,7 @@ const Navbar = () => {
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
         localStorage.removeItem('username');
+        setProfile(null); 
         navigate('/login');
     };
     const handleSearch = (e) => {
@@ -55,13 +80,13 @@ const Navbar = () => {
 
                 {/* Profile/Sign in */}
                 <div className="flex items-center space-x-4">
-                    {username ? (
+                    {profile ? (
                         <>
                             <div className="relative">
                                 <img
-                                    src="https://via.placeholder.com/40"
+                                    src={profile.profile_picture}
                                     alt="profile"
-                                    className="w-10 h-10 rounded-full border-2 border-white cursor-pointer"
+                                    className="w-10 h-10 rounded-full border-1 border-white cursor-pointer"
                                     onClick={toggleProfileMenu}
                                 />
                                 {isProfileMenuOpen && (

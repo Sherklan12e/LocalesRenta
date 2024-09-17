@@ -6,13 +6,15 @@ from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
-from .models import Post
+from .models import Post,Profile
 
 class ProfileDetailView(generics.RetrieveAPIView):
-    queryset = User.objects.all()
+    queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
     lookup_field = 'username'
     permission_classes = [IsAuthenticated] 
+
+
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = (AllowAny,)
