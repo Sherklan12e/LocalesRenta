@@ -5,6 +5,8 @@ import { FaBed, FaBath, FaCar, FaWifi, FaSwimmingPool, FaPaw, FaCouch, FaCalenda
 
 const DetalleAlquiler = () => {
     const [alquiler, setAlquiler] = useState(null);
+    const [activeImage, setActiveImage] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const { id } = useParams();
     const token = localStorage.getItem('access_token');
 
@@ -17,6 +19,9 @@ const DetalleAlquiler = () => {
                     }
                 });
                 setAlquiler(response.data);
+                if (response.data.imagenes && response.data.imagenes.length > 0) {
+                    setActiveImage(response.data.imagenes[0].imagen); // Establecer la primera imagen como activa por defecto
+                }
             } catch (error) {
                 console.error('Error al obtener el detalle del alquiler:', error);
             }
@@ -25,36 +30,72 @@ const DetalleAlquiler = () => {
         fetchAlquiler();
     }, [id, token]);
 
-    if (!alquiler) return <p className="text-center text-gray-500">Cargando...</p>;
-    const modificarEnlace = (enlace) => {
-        if (enlace && enlace.endsWith('0')) {
-            return enlace.slice(0, -1) + '1';
-        }
-        return enlace;
+    const openModal = () => {
+        setIsModalOpen(true);
     };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
+
+    if (!alquiler) return <p className="text-center text-gray-500">Cargando...</p>;
     return (
         <div className="container mx-auto px-4 py-8">
             <h2 className="text-4xl font-bold text-center text-gray-800 mb-8">{alquiler.titulo}</h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-white shadow-lg rounded-lg overflow-hidden">
-                <div className="flex flex-col">
-                {alquiler.imagenes && alquiler.imagenes.length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                        {alquiler.imagenes.map((imagen, index) => (
+                <div className="container mx-auto px-4 py-8">
+                    <h2 className="text-4xl font-bold text-center text-gray-800 mb-8">{alquiler.titulo}</h2>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-white shadow-lg rounded-lg overflow-hidden">
+                        {/* Imagen Principal y Zoom */}
+                        <div className="relative">
                             <img
-                                key={index}
-                                className="w-full h-48 object-cover rounded-lg"
-                                src={imagen.imagen ? imagen.imagen : "https://via.placeholder.com/600x400"}
-                                alt={`Imagen ${index + 1} de ${alquiler.titulo}`}
+                                className="w-full h-96 object-cover rounded-lg cursor-pointer hover:opacity-80 transition-opacity duration-300"
+                                src={activeImage ? activeImage : "https://via.placeholder.com/600x400"}
+                                alt={alquiler.titulo}
+                                onClick={openModal}
                             />
-                        ))}
+                        </div>
+
+                        {/* Miniaturas de Imágenes */}
+                        <div className="flex flex-wrap gap-4">
+                            {alquiler.imagenes && alquiler.imagenes.length > 0 ? (
+                                alquiler.imagenes.map((imagen, index) => (
+                                    <img
+                                        key={index}
+                                        className={`w-24 h-24 object-cover rounded-lg cursor-pointer ${activeImage === imagen.imagen ? 'border-4 border-blue-500' : ''}`}
+                                        src={imagen.imagen ? imagen.imagen : "https://via.placeholder.com/600x400"}
+                                        alt={`Imagen ${index + 1}`}
+                                        onClick={() => setActiveImage(imagen.imagen)}
+                                    />
+                                ))
+                            ) : (
+                                <div className="flex justify-center">
+                                    <img src="https://via.placeholder.com/600x400" alt="Imagen no disponible" />
+                                </div>
+                            )}
+                        </div>
                     </div>
-                ) : (
-                    <div className="flex justify-center">
-                        <img src="https://via.placeholder.com/600x400" alt="Imagen no disponible" />
-                    </div>
-                )}
+
+                    {/* Modal de Zoom */}
+                    {isModalOpen && (
+                        <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50" onClick={closeModal}>
+                            <div className="relative">
+                                <img
+                                    className="w-full max-w-3xl h-auto object-cover rounded-lg"
+                                    src={activeImage ? activeImage : "https://via.placeholder.com/1200x800"}
+                                    alt={alquiler.titulo}
+                                />
+                                <button
+                                    className="absolute top-2 right-2 bg-gray-800 text-white rounded-full p-2"
+                                    onClick={closeModal}
+                                >
+                                    X
+                                </button>
+                            </div>
+                        </div>
+                    )}
                 </div>
-                <div className="p-6 flex flex-col justify-between">
+                <div className="p-6 flex flex-col justify-around">
                     <div>
                         <h3 className="text-2xl font-semibold text-gray-700">{alquiler.titulo}</h3>
                         <p className="text-lg font-semibold text-green-600 mt-2">${alquiler.precio} / mes</p>

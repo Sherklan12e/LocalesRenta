@@ -1,29 +1,46 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const MainPage = () => {
+  const [alquileres, setAlquileres] = useState([]);
+
+  useEffect(() => {
+    const fetchAlquileres = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/alquiler/alquileres/view/'); // Cambia la URL según tu configuración
+        setAlquileres(response.data);
+      } catch (error) {
+        console.error('Error fetching alquileres:', error);
+      }
+    };
+
+    fetchAlquileres();
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-100">
-      <div className="relative bg-cover bg-center h-96" style={{ backgroundImage: `url('https://www.lanacion.com.ar/resizer/v2/patio-de-casa-ZDNN2AY3OZDZTPWM2HSBI32S3Q.jpg?auth=56395839ac3bdfbd8a341ff4ac5ece3b0f3a64102168186fc3ebbd11a2fe1a4e&width=420&height=280&quality=70&smart=true')` }}>
-        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+      <div
+        className="relative bg-cover brightness-50 bg-no-repeat bg-center h-lvh"
+        style={{ backgroundImage: `url('https://i.pinimg.com/originals/28/eb/eb/28ebeb4cbc97ee8671d9fb275549fcf0.jpg')` }}
+      >
+        <div className="absolute inset-0 flex items-center justify-center">
           <h1 className="text-4xl md:text-6xl text-white font-bold">Encuentra tu hogar ideal</h1>
         </div>
       </div>
 
       <div className="max-w-4xl mx-auto mt-8 p-4">
-        <form className="bg-white shadow-md rounded p-6">
-          <div className="flex flex-col md:flex-row items-center">
-            <input
-              type="text"
-              placeholder="Buscar por ubicación, tipo de propiedad..."
-              className="w-full md:w-2/3 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <button
-              type="submit"
-              className="mt-4 md:mt-0 md:ml-4 w-full md:w-auto bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700"
-            >
-              Buscar
-            </button>
-          </div>
+        <form className="bg-white rounded p-6">
+          <input
+            type="text"
+            placeholder="Buscar por ubicación, tipo de propiedad..."
+            className="w-full md:w-2/3 p-3 border border-black rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+          />
+          <button
+            type="submit"
+            className="mt-4 md:mt-0 md:ml-4 w-full md:w-auto bg-black text-white p-3 rounded-lg hover:bg-blue-700"
+          >
+            Buscar
+          </button>
         </form>
       </div>
 
@@ -32,35 +49,22 @@ const MainPage = () => {
         <h2 className="text-2xl md:text-3xl font-bold mb-6">Propiedades destacadas</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Propiedad 1 */}
-          <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-            <img src="https://www.lanacion.com.ar/resizer/v2/patio-de-casa-ZDNN2AY3OZDZTPWM2HSBI32S3Q.jpg?auth=56395839ac3bdfbd8a341ff4ac5ece3b0f3a64102168186fc3ebbd11a2fe1a4e&width=420&height=280&quality=70&smart=true" alt="Propiedad 1" className="w-full h-56 object-cover" />
-            <div className="p-4">
-              <h3 className="text-xl font-bold">Casa en la playa</h3>
-              <p className="text-gray-600 mt-2">3 habitaciones • 2 baños • 150 m²</p>
-              <p className="text-blue-600 font-bold mt-4">$1500/mes</p>
+          {alquileres.map(alquiler => (
+            <div key={alquiler.id} className="bg-white shadow-lg rounded-lg overflow-hidden">
+              <img
+                src={alquiler.imagenes[0] ? alquiler.imagenes[0].imagen : 'https://via.placeholder.com/420x280'}
+                alt={alquiler.titulo}
+                className="w-full h-56 object-cover"
+              />
+              <div className="p-4">
+                <h3 className="text-xl font-bold">{alquiler.titulo}</h3>
+                <p className="text-gray-600 mt-2">
+                  {alquiler.num_habitaciones} habitaciones • {alquiler.num_banos} baños • {alquiler.superficie} m²
+                </p>
+                <p className="text-blue-600 font-bold mt-4">${alquiler.precio}/mes</p>
+              </div>
             </div>
-          </div>
-
-          {/* Propiedad 2 */}
-          <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-            <img src="https://www.lanacion.com.ar/resizer/v2/patio-de-casa-ZDNN2AY3OZDZTPWM2HSBI32S3Q.jpg?auth=56395839ac3bdfbd8a341ff4ac5ece3b0f3a64102168186fc3ebbd11a2fe1a4e&width=420&height=280&quality=70&smart=true" alt="Propiedad 2" className="w-full h-56 object-cover" />
-            <div className="p-4">
-              <h3 className="text-xl font-bold">Apartamento en el centro</h3>
-              <p className="text-gray-600 mt-2">2 habitaciones • 1 baño • 80 m²</p>
-              <p className="text-blue-600 font-bold mt-4">$1200/mes</p>
-            </div>
-          </div>
-
-          {/* Propiedad 3 */}
-          <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-            <img src="https://www.lanacion.com.ar/resizer/v2/patio-de-casa-ZDNN2AY3OZDZTPWM2HSBI32S3Q.jpg?auth=56395839ac3bdfbd8a341ff4ac5ece3b0f3a64102168186fc3ebbd11a2fe1a4e&width=420&height=280&quality=70&smart=true" alt="Propiedad 3" className="w-full h-56 object-cover" />
-            <div className="p-4">
-              <h3 className="text-xl font-bold">Casa en las montañas</h3>
-              <p className="text-gray-600 mt-2">4 habitaciones • 3 baños • 200 m²</p>
-              <p className="text-blue-600 font-bold mt-4">$1800/mes</p>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </div>
