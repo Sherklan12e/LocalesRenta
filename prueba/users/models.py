@@ -23,3 +23,7 @@ class Profile(models.Model):
         super().save(*args, **kwargs)
     def __str__(self):
         return self.user.username
+    
+#     media/
+# │   └── profile_perfil/
+# │       └── juan.jpg
