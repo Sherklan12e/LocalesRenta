@@ -53,7 +53,7 @@ const MainPage = () => {
             
             <div key={alquiler.id} className="bg-white shadow-lg rounded-lg overflow-hidden">
               <img
-                src={alquiler.imagenes[0].imagen ? alquiler.imagenes[0].imagen : 'https://via.placeholder.com/420x280'}
+                // src={alquiler.imagenes[0].imagen ? alquiler.imagenes[0].imagen : 'https://via.placeholder.com/420x280'}
                 alt={alquiler.titulo}
                 className="w-full h-56 object-cover"
               />
