@@ -1,5 +1,6 @@
 from django.db import models
-
+import os 
+import random
 from django.contrib.auth.models import User
 
 class Post(models.Model):
@@ -19,14 +20,22 @@ class Profile(models.Model):
     location = models.CharField(max_length=100, blank=True, null=True)
 
     def save(self, *args, **kwargs):
+
         if self.user and not self.username:
             self.username = self.user.username
             self.bio = "Esta es una bio"
             self.location = "Argentina"
-        if not self.profile_picture:
-            default_image_path = os.path.join(settings.MEDIA_ROOT, 'profile_perfil/defaultProfile.jpg')
-            with open(default_image_path, 'rb') as f:
-                self.profile_picture.save('defaultProfile.jpg', File(f), save=False)
+        default_images = [
+            'profile_perfil/default1.jpg',
+            'profile_perfil/default2.jpg',
+            'profile_perfil/default3.jpg',
+            'profile_perfil/default4.jpg',
+            'profile_perfil/default5.jpg',
+        ]
+
+        if not self.profile_picture or self.profile_picture == 'defaultProfile.jpg':
+            self.profile_picture = random.choice(default_images)
+
         super(Profile, self).save(*args, **kwargs)
 
     def __str__(self):
