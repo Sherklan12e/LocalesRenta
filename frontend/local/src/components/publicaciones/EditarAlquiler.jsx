@@ -109,22 +109,25 @@ const EditarAlquiler = () => {
         event.preventDefault();
     
         const data = new FormData();
-    
+        console.log(Object.keys(formData))
         Object.keys(formData).forEach(key => {
             if (key === 'imagenes') {
                 for (const file of formData[key]) {
-                    data.append('imagenes', file);
+                    data.append('eliminarImagenes', file);
+                    console.log(data)
                 }
-            } else if (key === 'eliminarImagenes') {
+            } 
+            if (key === 'eliminarImagenes') {
                 if (formData[key].length > 0) {
                     data.append('eliminar_imagenes', JSON.stringify(formData[key]));
+                    
                 }
             } else {
                 data.append(key, formData[key]);
             }
         });
     
-        console.log([...data.entries()]);  // Verifica los datos enviados
+        console.log([...data.entries()]);  
     
         try {
             await axios.put(`http://127.0.0.1:8000/alquiler/alquileres/${id}/`, data, {
@@ -135,6 +138,7 @@ const EditarAlquiler = () => {
             });
             navigate('/Alquileres');
         } catch (error) {
+            console.log(data)
             console.error('Error al actualizar la publicación:', error.response.data);
         }
     };
