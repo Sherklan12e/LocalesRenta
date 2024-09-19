@@ -63,7 +63,8 @@ const EditarAlquiler = () => {
                     piscina: response.data.piscina,
                     mascotas_permitidas: response.data.mascotas_permitidas,
                     country: response.data.country,
-                    imagenes: alquilerData.imagenes.map(img => img.imagen) // Si quieres manejar imágenes, puedes añadir la lógica aquí
+                    imagenes: alquilerData.imagenes.map(img => img.imagen) ,
+                    eliminarImagenes: [] 
                     
                 });
             } catch (error) {
@@ -74,29 +75,13 @@ const EditarAlquiler = () => {
         fetchAlquiler();
     }, [id, token]);
     
-    const handleRemoveImage = (index) => {
-        const updatedImages = [...formData.imagenes];
-        const imageToRemove = updatedImages.splice(index, 1)[0];
-        
-        // Si la imagen tiene un ID, se añade a la lista de imágenes a eliminar
-        if (imageToRemove.id) {
-            setFormData(prevState => ({
-                ...prevState,
-                eliminarImagenes: [...(prevState.eliminarImagenes || []), imageToRemove.id]
-            }));
-        }
-        // WTF no se borra ptmr
-        // Actualiza el estado
+    const handleDeleteImage = (imageId) => {
         setFormData(prevState => ({
             ...prevState,
-            imagenes: updatedImages
+            eliminarImagenes: [...prevState.eliminarImagenes, imageId]
         }));
+        console.log('Imágenes a eliminar actualizadas:', [...formData.eliminarImagenes, imageId]);
     };
-    
-    
-    
-    
-    
     
     
     const handleChange = (e) => {
@@ -117,23 +102,29 @@ const EditarAlquiler = () => {
                 [name]: value
             });
         }
-        
     };
+    
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+    
         const data = new FormData();
+    
         Object.keys(formData).forEach(key => {
             if (key === 'imagenes') {
                 for (const file of formData[key]) {
                     data.append('imagenes', file);
                 }
             } else if (key === 'eliminarImagenes') {
-                data.append('eliminar_imagenes', JSON.stringify(formData[key])); // Convertir a JSON
+                if (formData[key].length > 0) {
+                    data.append('eliminar_imagenes', JSON.stringify(formData[key]));
+                }
             } else {
                 data.append(key, formData[key]);
             }
         });
+    
+        console.log([...data.entries()]);  // Verifica los datos enviados
     
         try {
             await axios.put(`http://127.0.0.1:8000/alquiler/alquileres/${id}/`, data, {
@@ -144,9 +135,17 @@ const EditarAlquiler = () => {
             });
             navigate('/Alquileres');
         } catch (error) {
-            console.error('Error al actualizar la publicación:', error);
+            console.error('Error al actualizar la publicación:', error.response.data);
         }
     };
+    
+    
+    
+    
+    
+    
+    
+    
     if (!alquiler) return <p>Cargando...</p>;
    
     return (
@@ -237,6 +236,8 @@ const EditarAlquiler = () => {
                         className="form-input mt-1 block w-full"
                     />
                 </div>
+              
+
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2">Año de Construcción</label>
                     <input
@@ -343,8 +344,8 @@ const EditarAlquiler = () => {
                     />
                     {formData.imagenes.map((imagen, index) => (
                         <div key={index} className="mb-4">
-                            <img src={imagen} alt={`Imagen ${index + 1}`} className="h-24 w-24 object-cover" />
-                            <button type="button" onClick={() => handleRemoveImage(index)} className="ml-2 p-2 bg-red-500 text-white">
+                            <img src={imagen} alt="a" className="h-24 w-24 object-cover" />
+                            <button type="button" onClick={() => handleDeleteImage(index)} className="ml-2 p-2 bg-red-500 text-white">
                                 Eliminar
                             </button>
                         </div>

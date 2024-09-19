@@ -35,6 +35,11 @@ class AlquilerCreateView(generics.ListCreateAPIView):
         
 
 
+import json
+
+from rest_framework.response import Response
+from rest_framework import status
+
 class AlquilerRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Alquiler.objects.all()
     serializer_class = AlquilerSerializer
@@ -43,31 +48,29 @@ class AlquilerRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     def perform_update(self, serializer):
         alquiler = serializer.save()
 
-        # Eliminar imágenes si el usuario lo ha solicitado
-        eliminar_imagenes = self.request.data.get('eliminar_imagenes')
-        if eliminar_imagenes:
+        eliminar_imagenes = self.request.data.get('eliminar_imagenes', '[]')
+        try:
             eliminar_imagenes = json.loads(eliminar_imagenes)
-            for imagen_id in eliminar_imagenes:
-                try:
-                    imagen = ImagenAlquiler.objects.get(id=imagen_id)
-                    imagen.imagen.delete(save=False)  # Borra el archivo físico
-                    imagen.delete()  # Borra el registro de la base de datos
-                except ImagenAlquiler.DoesNotExist:
-                    continue
+        except json.JSONDecodeError as e:
+            print(f"Error al decodificar eliminar_imagenes: {e}")
+            return Response({'error': 'Error al procesar eliminar_imagenes'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Agregar nuevas imágenes
+        print("Imágenes a eliminar:", eliminar_imagenes)
+        for imagen_id in eliminar_imagenes:
+            try:
+                imagen = ImagenAlquiler.objects.get(id=imagen_id)
+                imagen.imagen.delete(save=False)  # Borra el archivo físico
+                imagen.delete()  # Borra el registro de la base de datos
+            except ImagenAlquiler.DoesNotExist:
+                print(f"Imagen con ID {imagen_id} no encontrada")
+                continue
+
         nuevas_imagenes = self.request.FILES.getlist('imagenes')
+        print("Nuevas imágenes:", nuevas_imagenes)
         for nueva_imagen in nuevas_imagenes:
             ImagenAlquiler.objects.create(alquiler=alquiler, imagen=nueva_imagen)
 
 
-    def perform_destroy(self, instance):
-        if instance.user != self.request.user:
-            raise PermissionDenied("No tienes permiso para eliminar esta publicación.")
-        for imagen in instance.imagenes.all():
-            imagen.imagen.delete(save=False)
-            imagen.delete()
-        instance.delete()
 
 class AlquilerListView(generics.ListAPIView):
     queryset = Alquiler.objects.all().order_by('-fecha_publicacion')

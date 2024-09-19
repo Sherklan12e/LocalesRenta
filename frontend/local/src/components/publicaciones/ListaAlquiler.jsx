@@ -114,7 +114,7 @@ const ListaAlquileres = () => {
                             {console.log(selectedAlquiler.id)}
                             {console.log("======")}
                             {console.log(id, "a")}
-                            {selectedAlquiler.user_id === userId && (
+                           
                                 <> 
                                     <button
                                         onClick={() => {
@@ -135,7 +135,6 @@ const ListaAlquileres = () => {
                                         Eliminar
                                     </button>
                                 </>
-                            )}
                         </div>
                         <button
                             onClick={closeModal}
