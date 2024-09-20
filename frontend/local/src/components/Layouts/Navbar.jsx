@@ -23,16 +23,16 @@ const Navbar = () => {
           position: toast.POSITION.TOP_RIGHT,
         });
     };
-    function PrincipalPage() {
-        useEffect(() => {
-          const showToast = localStorage.getItem('showSuccessToast');
-          if (showToast === 'true') {
-            toast.success("Inicio de sesión exitoso!", {
-              position: "top-right",  // Posición corregida
-            });
-            localStorage.removeItem('showSuccessToast');
-          }
-        }, []);
+    
+    useEffect(() => {
+    const showToast = localStorage.getItem('showSuccessToast');
+    if (showToast === 'true') {
+        toast.success("Inicio de sesión exitoso!", {
+            position: "top-right",  // Posición corregida
+        });
+        localStorage.removeItem('showSuccessToast');
+    }
+    )
 
     if (location.state && location.state.showSuccessToast) {
         toast.success("Inicio de sesión exitoso!", {
