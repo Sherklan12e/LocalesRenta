@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const EditarAlquiler = () => {
-
+    const [showModal, setShowModal] = useState(false);
     const [alquiler, setAlquiler] = useState(null);
     const [formData, setFormData] = useState({
         titulo: '',

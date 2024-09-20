@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { VscKebabVertical } from "react-icons/vsc";
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-
+import { useNavigate, useParams } from 'react-router-dom';
+import { jwtDecode } from "jwt-decode";
 const ListaAlquileres = () => {
     const [alquileres, setAlquileres] = useState([]);
     const [showModal, setShowModal] = useState(false);
@@ -10,7 +10,19 @@ const ListaAlquileres = () => {
     const id = localStorage.getItem('id');
     const navigate = useNavigate();
     const token = localStorage.getItem('access_token');
-    const userId = localStorage.getItem('user_id'); // ID del usuario autenticado
+    const { username } = useParams();
+    // sacar datos del usuario 
+    let userId = null;
+    if (token){
+        const descodificado = jwtDecode(token);
+        userId = descodificado.user_id;
+    }
+
+    
+
+
+
+
 
     useEffect(() => {
         const fetchAlquileres = async () => {
@@ -110,13 +122,11 @@ const ListaAlquileres = () => {
                     <div className="bg-white rounded-lg shadow-lg w-80 p-6">
                         <h3 className="text-lg font-bold mb-4">Opciones</h3>
                         <div className="mt-4 flex justify-between">
-                            {console.log(selectedAlquiler.user_id === id)}
-                            {console.log(selectedAlquiler.id)}
-                            {console.log("======")}
-                            {console.log(id, "a")}
+                            {console.log(selectedAlquiler.user , "id del usuario")}
+                            
                            
                                 <> 
-                                    <button
+                                    {/* <button
                                         onClick={() => {
                                             handleEdit(selectedAlquiler.id);
                                             closeModal();
@@ -124,16 +134,19 @@ const ListaAlquileres = () => {
                                         className="bg-blue-500 text-white text-sm font-semibold px-4 py-2 rounded hover:bg-blue-600"
                                     >
                                         Editar
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            handleDelete(selectedAlquiler.id);
-                                            closeModal();
-                                        }}
-                                        className="bg-red-500 text-white text-sm font-semibold px-4 py-2 rounded hover:bg-red-600"
-                                    >
-                                        Eliminar
-                                    </button>
+                                    </button> */}
+                                        {userId === selectedAlquiler.user && (
+                                        <button
+                                                onClick={() => {
+                                                    handleDelete(selectedAlquiler.id);
+                                                    closeModal();
+                                                }}
+                                                className="bg-red-500 text-white text-sm font-semibold px-4 py-2 rounded hover:bg-red-600"
+                                            >
+                                                Eliminar
+                                            </button>
+                                        )}
+
                                 </>
                         </div>
                         <button

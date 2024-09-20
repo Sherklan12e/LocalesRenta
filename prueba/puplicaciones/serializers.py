@@ -6,7 +6,7 @@ import json
 class ImagenAlquilerSerializer(serializers.ModelSerializer):
     class Meta:
         model = ImagenAlquiler
-        fields = ['imagen']
+        fields = ['id','imagen']
 
 class AlquilerSerializer(serializers.ModelSerializer):
     country = CountryField()

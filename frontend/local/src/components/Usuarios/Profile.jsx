@@ -1,16 +1,20 @@
 // Profile.js
 
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams , useNavigate} from 'react-router-dom';
 import axios from 'axios';
-
+import { jwtDecode } from 'jwt-decode';
 function Profile() {
     const { username } = useParams();
     const [profile, setProfile] = useState(null);
-
-
-
+    const [alquileres, setAlquileres] = useState([]);
+    const navigate = useNavigate();
     const token = localStorage.getItem('access_token');
+    let usuarioId = null;
+    if (token){
+        const decodificar = jwtDecode(token);
+        usuarioId = decodificar.user_id;
+    }
     useEffect(() => {
         if (!token) {
             console.error('No token found, please log in.');
@@ -32,10 +36,29 @@ function Profile() {
 
     }, [username]);
 
+    useEffect(() =>{
+        const fechAlquierles = async () => {
+            try {
+                const response = await axios.get('http://127.0.0.1:8000/alquiler/alquileres/view/', {
+                    headers: {
+                        'Authorization':`Bearer ${token}`
+                    }
+                });
+                setAlquileres(response.data);
+            } catch (error){
+                console.error('Error al obtener los alquileres: ', error);
+            }
+        };
+        fechAlquierles();
+    }, [token]);
+    const handleDetalle = (id) => {
+        navigate(`/detalle-alquiler/${id}`);
+    }
+
     if (!profile) {
         return <div>Loading...</div>;
     }
-
+    
     return (
         <div className="min-h-screen bg-gray-100 flex justify-center py-12">
             <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-6xl">
@@ -74,56 +97,50 @@ function Profile() {
                     </div> */}
                 </div>
 
-                {/* Biografía */}
                 <div className="mt-6">
                     <p className="text-gray-600">
                         {profile.bio}
                     </p>
                 </div>
 
-                {/* Botón para seguir */}
                 <div className="mt-6 flex justify-center">
                     <button className="bg-blue-500 text-white py-2 px-6 rounded-full hover:bg-blue-600">
                         Enviar mensaje
                     </button>
                 </div>
 
-                {/* Sección de publicaciones */}
                 <div className="mt-8">
                     <h2 className="text-xl font-semibold text-gray-800">Posts</h2>
-                    <div className="grid grid-cols-3 gap-4 mt-4">
-                        {/* Ejemplos de imágenes de publicaciones */}
-                        <img
-                            className="w-full h-32 object-cover rounded-lg"
-                            src="https://source.unsplash.com/random/800x600?beach"
-                            alt="Post 1"
-                        />
-                        <img
-                            className="w-full h-32 object-cover rounded-lg"
-                            src="https://source.unsplash.com/random/800x600?forest"
-                            alt="Post 2"
-                        />
-                        <img
-                            className="w-full h-32 object-cover rounded-lg"
-                            src="https://source.unsplash.com/random/800x600?city"
-                            alt="Post 3"
-                        />
-                        <img
-                            className="w-full h-32 object-cover rounded-lg"
-                            src="https://source.unsplash.com/random/800x600?mountains"
-                            alt="Post 4"
-                        />
-                        <img
-                            className="w-full h-32 object-cover rounded-lg"
-                            src="https://source.unsplash.com/random/800x600?night"
-                            alt="Post 5"
-                        />
-                        <img
-                            className="w-full h-32 object-cover rounded-lg"
-                            src="https://source.unsplash.com/random/800x600?road"
-                            alt="Post 6"
-                        />
-                    </div>
+                    {console.log(alquileres, "alquileres")}
+                    {console.log(profile.id , "id  del usuario")}
+                    {alquileres.map(alquileres => (
+                        
+                        profile.id === alquileres.user &&  (
+                       
+                        <div key={alquileres.id} className="grid grid-cols-3 gap-4 mt-4">
+                            
+                            {alquileres.imagenes && alquileres.imagenes.length > 0 ? (
+                                <img
+                                onClick={() => handleDetalle(alquileres.id)} 
+                                className="w-full h-32 object-cover rounded-lg"
+                                src={alquileres.imagenes[0].imagen}
+                                alt="Post 1"    
+                                />
+                            ):(
+                                <img
+                                className="w-full h-32 object-cover rounded-lg"
+                                src="https://www.dropbox.com/scl/fi/qp9v9jfykx02wla9l8jrf/35a4098a7a089a791cc381ee7bdd2dc2.jpg?rlkey=ff5y2muw14ra5rh57k4wcy50n&st=v1o9im3c&dl=1 "
+                                alt="Post 1"    
+                            />
+                            )}
+
+                        </div> 
+                        )
+                       
+                       
+
+                    ))}
+                    
                 </div>
             </div>
         </div>

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const MainPage = () => {
   const [alquileres, setAlquileres] = useState([]);
-
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchAlquileres = async () => {
       try {
@@ -17,6 +18,11 @@ const MainPage = () => {
     fetchAlquileres();
   }, []);
 
+  const handleDetalle = (id) => {
+    navigate(`/detalle-alquiler/${id}`)
+  }
+
+
   return (
     <div className="min-h-screen bg-gray-100">
       <div
@@ -29,7 +35,7 @@ const MainPage = () => {
       </div>
 
       <div className="max-w-4xl mx-auto mt-8 p-4">
-        <form className="bg-white rounded p-6">
+        <form className=" rounded p-6">
           <input
             type="text"
             placeholder="Buscar por ubicación, tipo de propiedad..."
@@ -47,13 +53,14 @@ const MainPage = () => {
       {/* Sección de propiedades */}
       <div className="max-w-6xl mx-auto mt-12 p-4">
         <h2 className="text-2xl md:text-3xl font-bold mb-6">Propiedades destacadas</h2>
-``      {console.log(alquileres)}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {alquileres.map(alquiler => (
+          {alquileres.slice(0, 3).map(alquiler => (
             
             <div key={alquiler.id} className="bg-white shadow-lg rounded-lg overflow-hidden">
+              
               <img
-                src={alquiler.imagenes.imagen ? alquiler.imagenes[0].imagen : 'https://via.placeholder.com/420x280'}
+              onClick={() => handleDetalle(alquiler.id)} 
+                src={alquiler.imagenes[0].imagen }
                 alt={alquiler.titulo}
                 className="w-full h-56 object-cover"
               />

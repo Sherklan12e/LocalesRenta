@@ -1,13 +1,19 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
     const navigate = useNavigate();
-    
+    const showToastMessage = () => {
+        toast.success("Success Notification !", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+      };
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
@@ -22,7 +28,8 @@ const Login = () => {
             localStorage.setItem('id', response.data.id);
             
             setMessage('Login successful!');
-            navigate('/');
+            navigate('/', { state: { showSuccessToast: true } });
+
         } catch (error) {
             setMessage('Login failed. Please check your credentials.');
             console.log(error)
@@ -30,7 +37,9 @@ const Login = () => {
     };
 
     return (
+        
         <div className="flex items-center justify-center min-h-screen bg-gray-100 p-6">
+            <ToastContainer />
             <div className="w-full max-w-sm bg-white rounded-lg shadow-md p-8">
                 <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
                 <form onSubmit={handleLogin}>

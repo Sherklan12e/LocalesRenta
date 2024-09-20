@@ -2,6 +2,9 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { AiOutlineSearch } from "react-icons/ai"; 
 import { Link, useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useLocation } from 'react-router-dom';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -13,6 +16,29 @@ const Navbar = () => {
     const toggleMenu = () => {
         setIsOpen(!isOpen);
     };
+
+    
+    const showToastMessage = () => {
+        toast.success("Success Notification !", {
+          position: toast.POSITION.TOP_RIGHT,
+        });
+    };
+    function PrincipalPage() {
+        useEffect(() => {
+          const showToast = localStorage.getItem('showSuccessToast');
+          if (showToast === 'true') {
+            toast.success("Inicio de sesión exitoso!", {
+              position: "top-right",  // Posición corregida
+            });
+            localStorage.removeItem('showSuccessToast');
+          }
+        }, []);
+
+    if (location.state && location.state.showSuccessToast) {
+        toast.success("Inicio de sesión exitoso!", {
+            position: "top-right"  // Uso correcto de la posición
+        });
+    }
 
     useEffect(() => {
         const token = localStorage.getItem('access_token');
@@ -26,7 +52,6 @@ const Navbar = () => {
             }
         })
         .then (response => {
-            console.log("El perfil", response.data);
             setProfile(response.data);
         }) 
         .catch(error => {
@@ -52,7 +77,14 @@ const Navbar = () => {
         // Manejar la búsqueda, por ejemplo, redirigiendo a una página de resultados
         navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
     }; 
+    
+    const location = useLocation();
+
+ 
+
     return (
+        <>
+        <ToastContainer />           
         <nav className="bg-black p-4 relative">
             <div className="container mx-auto flex items-center justify-between">
                 {/* Logo */}
@@ -60,8 +92,9 @@ const Navbar = () => {
                     <Link to="/">Rent</Link>
                    
                 </div>
-
+                
                 {/* Desktop Links */}
+                
                 <div className="hidden md:flex space-x-6">
                     <Link to="/Alquileres" className="text-white hover:text-gray-300">Locales</Link>
                     <form onSubmit={handleSearch} className="relative flex items-center">
@@ -77,7 +110,6 @@ const Navbar = () => {
                         </button>
                     </form>
                 </div>
-
                 {/* Profile/Sign in */}
                 <div className="flex items-center space-x-4">
                     {profile ? (
@@ -149,6 +181,7 @@ const Navbar = () => {
                 </div>
             )}
         </nav>
+        </>
     );
 };
 

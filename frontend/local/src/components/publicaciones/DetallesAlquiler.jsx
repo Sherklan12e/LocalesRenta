@@ -85,12 +85,7 @@ const DetalleAlquiler = () => {
                                     src={activeImage ? activeImage : "https://via.placeholder.com/1200x800"}
                                     alt={alquiler.titulo}
                                 />
-                                <button
-                                    className="absolute top-2 right-2 bg-gray-800 text-white rounded-full p-2"
-                                    onClick={closeModal}
-                                >
-                                    X
-                                </button>
+                                
                             </div>
                         </div>
                     )}
