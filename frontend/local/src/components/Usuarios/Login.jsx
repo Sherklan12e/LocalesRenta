@@ -9,11 +9,7 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
     const navigate = useNavigate();
-    const showToastMessage = () => {
-        toast.success("Success Notification !", {
-          position: toast.POSITION.TOP_RIGHT,
-        });
-      };
+
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
@@ -21,23 +17,24 @@ const Login = () => {
                 username,
                 password
             });
-            // const { id, access, refresh } = response.data;
+
             localStorage.setItem('access_token', response.data.access);
             localStorage.setItem('refresh_token', response.data.refresh);
             localStorage.setItem('username', username);
             localStorage.setItem('id', response.data.id);
             
+            // Guardamos un valor en localStorage para mostrar el mensaje una sola vez
+            localStorage.setItem('loggedIn', 'true');
+            
             setMessage('Login successful!');
-            navigate('/', { state: { showSuccessToast: true } });
-
+            navigate('/'); 
+            window.location.reload()
         } catch (error) {
             setMessage('Login failed. Please check your credentials.');
-            console.log(error)
         }
     };
 
     return (
-        
         <div className="flex items-center justify-center min-h-screen bg-gray-100 p-6">
             <ToastContainer />
             <div className="w-full max-w-sm bg-white rounded-lg shadow-md p-8">

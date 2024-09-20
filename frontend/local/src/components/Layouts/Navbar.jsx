@@ -4,48 +4,48 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { Link, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useLocation } from 'react-router-dom';
 
 const Navbar = () => {
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [isProfileMenuOpen, setProfileMenuOpen] = useState(false);
     const username = localStorage.getItem('username');
     const [profile, setProfile] = useState(null);
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState("");
+    const loggedIn = localStorage.getItem('loggedIn');
+   
+
+    const token = localStorage.getItem('access_token');
     const toggleMenu = () => {
         setIsOpen(!isOpen);
     };
-
+    
     
     const showToastMessage = () => {
         toast.success("Success Notification !", {
           position: toast.POSITION.TOP_RIGHT,
         });
     };
-    
     useEffect(() => {
-    const showToast = localStorage.getItem('showSuccessToast');
-    if (showToast === 'true') {
-        toast.success("Inicio de sesión exitoso!", {
-            position: "top-right",  // Posición corregida
-        });
-        localStorage.removeItem('showSuccessToast');
-    }
-    )
+        
+        // Si está logueado y es la primera vez, mostramos el mensaje
+        if (loggedIn === 'true') {
+            toast.success('Bienvenido!', { position: 'top-right' });
+            localStorage.removeItem('loggedIn');  // Lo removemos para que no se muestre nuevamente
+        }else{
+            console.log('a')
+        }
 
-    if (location.state && location.state.showSuccessToast) {
-        toast.success("Inicio de sesión exitoso!", {
-            position: "top-right"  // Uso correcto de la posición
-        });
-    }
-
+        setIsLoggedIn(!!localStorage.getItem('access_token')); // Verificamos si hay un token
+    }, []);
+   
     useEffect(() => {
-        const token = localStorage.getItem('access_token');
         if (!token){
             console.error("Token no encontrada perra , por favor logeate");
             return;
         }
+       
         axios.get(`http://127.0.0.1:8000/api/profile/${username}/`,{
             headers: {
                 'Authorization' : `Bearer ${token}`
@@ -78,13 +78,14 @@ const Navbar = () => {
         navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
     }; 
     
-    const location = useLocation();
-
- 
+    
+    if(loggedIn){
+        showToastMessage
+       
+    }
 
     return (
-        <>
-        <ToastContainer />           
+        <>     
         <nav className="bg-black p-4 relative">
             <div className="container mx-auto flex items-center justify-between">
                 {/* Logo */}
@@ -93,8 +94,7 @@ const Navbar = () => {
                    
                 </div>
                 
-                {/* Desktop Links */}
-                
+                <ToastContainer />
                 <div className="hidden md:flex space-x-6">
                     <Link to="/Alquileres" className="text-white hover:text-gray-300">Locales</Link>
                     <form onSubmit={handleSearch} className="relative flex items-center">

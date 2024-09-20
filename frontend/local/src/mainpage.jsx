@@ -60,7 +60,7 @@ const MainPage = () => {
               
               <img
               onClick={() => handleDetalle(alquiler.id)} 
-                src={alquiler.imagenes[0].imagen }
+                // src={alquiler.imagenes[0].imagen }
                 alt={alquiler.titulo}
                 className="w-full h-56 object-cover"
               />
