@@ -13,8 +13,9 @@ const Navbar = () => {
     const [profile, setProfile] = useState(null);
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState("");
+
     const loggedIn = localStorage.getItem('loggedIn');
-   
+//    const [isLogout, setIsLogout] = useState(false);
 
     const token = localStorage.getItem('access_token');
     const toggleMenu = () => {
@@ -31,14 +32,28 @@ const Navbar = () => {
         
         // Si está logueado y es la primera vez, mostramos el mensaje
         if (loggedIn === 'true') {
-            toast.success('Bienvenido!', { position: 'top-right' });
+            toast.success('Bienvenido ❤️', { position: 'top-right' });
             localStorage.removeItem('loggedIn');  // Lo removemos para que no se muestre nuevamente
-        }else{
-            console.log('a')
         }
+        if (loggedIn === 'false'){
+            console.log("salio1")
+            toast.warning('Bienvenido ', { position: 'top-right' });
+        }
+        
 
         setIsLoggedIn(!!localStorage.getItem('access_token')); // Verificamos si hay un token
     }, []);
+
+
+
+
+    
+
+
+
+
+
+
    
     useEffect(() => {
         if (!token){
@@ -60,18 +75,35 @@ const Navbar = () => {
         });
 
     }, [username])
-
+   
+    
     const toggleProfileMenu = () => {
         setProfileMenuOpen(!isProfileMenuOpen);
     };
+    
 
+
+    let logoutuser = false; 
     const logout = () => {
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
         localStorage.removeItem('username');
+        logoutuser = true;
         setProfile(null); 
         navigate('/login');
+        if (logoutuser) {
+            console.log("Usuario deslogueado");
+            logoutuser = false;
+            console.log(logoutuser);
+        } else {
+            console.log(logoutuser);
+        }
     };
+    
+
+
+
+    
     const handleSearch = (e) => {
         e.preventDefault();
         // Manejar la búsqueda, por ejemplo, redirigiendo a una página de resultados
@@ -79,10 +111,8 @@ const Navbar = () => {
     }; 
     
     
-    if(loggedIn){
-        showToastMessage
-       
-    }
+  
+
 
     return (
         <>     
@@ -91,10 +121,12 @@ const Navbar = () => {
                 {/* Logo */}
                 <div className="text-white text-xl font-bold">
                     <Link to="/">Rent</Link>
-                   
                 </div>
+                <div>
+               
+                </div>
+
                 
-                <ToastContainer />
                 <div className="hidden md:flex space-x-6">
                     <Link to="/Alquileres" className="text-white hover:text-gray-300">Locales</Link>
                     <form onSubmit={handleSearch} className="relative flex items-center">
@@ -170,7 +202,7 @@ const Navbar = () => {
                     {username ? (
                         <>
                             <Link to="/profile" className="block py-2 px-4 text-white hover:bg-blue-500">Profile</Link>
-                            <button onClick={logout} className="block w-full py-2 px-4 text-left text-white hover:bg-blue-500">Logout</button>
+                            <button onClick={() => { logout(); }}  className="block w-full py-2 px-4 text-left text-white hover:bg-blue-500">Logout</button>
                         </>
                     ) : (
                         <>
@@ -181,6 +213,7 @@ const Navbar = () => {
                 </div>
             )}
         </nav>
+        <ToastContainer />
         </>
     );
 };
