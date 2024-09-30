@@ -18,6 +18,10 @@ class Profile(models.Model):
     bio = models.TextField(blank=True, null=True)
     profile_picture = models.ImageField(upload_to='profile_perfil/', default='defaultProfile.jpg', null=True)
     location = models.CharField(max_length=100, blank=True, null=True)
+    facebook = models.CharField(max_length=100, blank=True, null=True)
+    instagram = models.CharField(max_length=100, blank=True, null=True)
+
+    
 
     def save(self, *args, **kwargs):
 

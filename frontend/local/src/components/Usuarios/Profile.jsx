@@ -1,6 +1,7 @@
 // Profile.js
 
 import React, { useState, useEffect } from 'react';
+import { RiInstagramFill,RiFacebookCircleFill } from "react-icons/ri";
 import { useParams , useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
@@ -84,7 +85,7 @@ function Profile() {
                 {/* Estadísticas del perfil */}
                 <div className="mt-6 flex justify-between text-center">
                     <div>
-                        <p className="text-lg font-bold text-gray-800">150</p>
+                        <p className="text-lg font-bold text-gray-800">nada por ahora</p>
                         <p className="text-gray-500">Posts</p>
                     </div>
                     {/* <div>
@@ -101,6 +102,16 @@ function Profile() {
                     <p className="text-gray-600">
                         {profile.bio}
                     </p>
+                </div>
+
+                <div className="mt-6">
+                    <a href=""> <RiInstagramFill  className=' text-3xl' /></a>
+                </div>
+                
+                <div className="mt-6">
+                    <a href="">   <RiFacebookCircleFill className='text-3xl'  /> </a>
+                   
+
                 </div>
 
                 <div className="mt-6 flex justify-center">
