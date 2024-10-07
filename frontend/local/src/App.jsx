@@ -11,8 +11,8 @@ import ListaAlquileres from './components/publicaciones/ListaAlquiler';
 import CrearPublicacion from './components/publicaciones/CrearAlquiler';
 import EditarAlquiler from './components/publicaciones/EditarAlquiler';
 import DetalleAlquiler from './components/publicaciones/DetallesAlquiler';
-import EditProfile  from './components/Usuarios/EditarProfile';
 import Profile from './components/Usuarios/Profile';
+import EditProfile from './components/Usuarios/EditarProfile';
 
 function App() {
   return (
@@ -28,6 +28,7 @@ function App() {
         <Route path="/editar-alquiler/:id" element={<EditarAlquiler />} />
         <Route path="/detalle-alquiler/:id" element={<DetalleAlquiler />} />
         <Route path="/profile/:username" element={<Profile />} />
+        <Route path="/profile/:username/edit" element={<EditProfile />} />
         <Route path="/edi" element={<EditProfile/>} />
         {/* Define otras rutas aquí */}
       </Routes>

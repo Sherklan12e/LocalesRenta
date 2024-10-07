@@ -88,14 +88,7 @@ function Profile() {
                         <p className="text-lg font-bold text-gray-800">nada por ahora</p>
                         <p className="text-gray-500">Posts</p>
                     </div>
-                    {/* <div>
-                        <p className="text-lg font-bold text-gray-800">1.2k</p>
-                        <p className="text-gray-500">Followers</p>
-                    </div>
-                    <div>
-                        <p className="text-lg font-bold text-gray-800">320</p>
-                        <p className="text-gray-500">Following</p>
-                    </div> */}
+                   
                 </div>
 
                 <div className="mt-6">
@@ -104,15 +97,16 @@ function Profile() {
                     </p>
                 </div>
 
-                <div className="mt-6">
-                    <a href=""> <RiInstagramFill  className=' text-3xl' /></a>
+                <div>
+                    <div className="mt-6">
+                        <a href=""> <RiInstagramFill  className=' text-3xl' /></a>
+                    </div>
+                    
+                    <div className="mt-6">
+                        <a href="">   <RiFacebookCircleFill className='text-3xl'  /> </a>
+                    </div>
                 </div>
-                
-                <div className="mt-6">
-                    <a href="">   <RiFacebookCircleFill className='text-3xl'  /> </a>
-                   
-
-                </div>
+                <a href="">Editar</a>
 
                 <div className="mt-6 flex justify-center">
                     <button className="bg-blue-500 text-white py-2 px-6 rounded-full hover:bg-blue-600">
@@ -147,9 +141,6 @@ function Profile() {
 
                         </div> 
                         )
-                       
-                       
-
                     ))}
                     
                 </div>

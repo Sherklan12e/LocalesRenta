@@ -8,6 +8,21 @@ from rest_framework.views import APIView
 
 from .models import Post,Profile
 
+from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated
+from .models import Profile
+from .serializers import ProfileSerializer
+
+class ProfileUpdateView(generics.UpdateAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+    lookup_field = 'username'
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        # Get the object Profile based on the username from the URL
+        return Profile.objects.get(username=self.kwargs['username'])
+
 class ProfileDetailView(generics.RetrieveAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
@@ -39,19 +54,3 @@ class PostDeleteView(generics.DestroyAPIView):
         if post.user != request.user:
             raise PermissionDenied("You do not have permission to delete this post.")
         return super().delete(request, *args, **kwargs)
-
-class UserProfileView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        profile = Profile.objects.get(user=request.user)
-        serializer = ProfileSerializer(profile)
-        return Response(serializer.data)
-
-    def put(self, request):
-        profile = Profile.objects.get(user=request.user)
-        serializer = ProfileSerializer(profile, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
