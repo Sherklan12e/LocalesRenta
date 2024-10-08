@@ -47,12 +47,16 @@ function Profile() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+    
+        // Use FormData to handle the file upload
         const formData = new FormData();
         formData.append('username', profileData.username);
         formData.append('bio', profileData.bio);
         formData.append('location', profileData.location);
         formData.append('facebook', profileData.facebook);
         formData.append('instagram', profileData.instagram);
+    
+        // Only append profile_picture if a file was selected
         if (profileData.profile_picture) {
             formData.append('profile_picture', profileData.profile_picture); // Append picture if exists
         }
@@ -61,61 +65,71 @@ function Profile() {
             await axios.put(`http://127.0.0.1:8000/api/profile/${username}/update/`, formData, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'multipart/form-data', // Set content type for FormData
+                    'Content-Type': 'multipart/form-data', // Important for file uploads
                 },
             });
             alert('Profile updated successfully!');
         } catch (error) {
-            console.error('There was an error updating the profile!', error.response.data);
-            alert('Error updating profile: ' + error.response.data.detail || 'Unknown error');
+            console.error('There was an error updating the profile!', error.response?.data);
+            alert('Error updating profile: ' + (error.response?.data.detail || 'Unknown error'));
         }
     };
     
+    
+    console.log(profileData.profile_picture); // should log the File object, not just the name
+   
+    console.log(profileData.profile_picture); // Should output a File object
 
     return (
-        <form onSubmit={handleSubmit}>
-            <input
-                type="file"
-                name="profile_picture"
-                onChange={(e) => setProfileData({ ...profileData, profile_picture: e.target.files[0] })}
+        <form onSubmit={handleSubmit} encType="multipart/form-data">
+        <input
+            type="file"
+            name="profile_picture"
+            onChange={(e) => {
+                const file = e.target.files[0];
+                setProfileData({ ...profileData, profile_picture: file });
+            }}
             />
 
-            <input
-                type="text"
-                name="username"
-                value={profileData.username}
-                onChange={handleChange}
-                placeholder="Username"
-            />
-            <textarea
-                name="bio"
-                value={profileData.bio}
-                onChange={handleChange}
-                placeholder="Bio"
-            />
-            <input
-                type="text"
-                name="location"
-                value={profileData.location}
-                onChange={handleChange}
-                placeholder="Location"
-            />
-            <input
-                type="text"
-                name="facebook"
-                value={profileData.facebook}
-                onChange={handleChange}
-                placeholder="Facebook"
-            />
-            <input
-                type="text"
-                name="instagram"
-                value={profileData.instagram}
-                onChange={handleChange}
-                placeholder="Instagram"
-            />
-            <button type="submit">Update Profile</button>
-        </form>
+    
+        <input
+            type="text"
+            name="username"
+            value={profileData.username ?? ''}
+            onChange={handleChange}
+            placeholder="Username"
+        />
+        <textarea
+            name="bio"
+            value={profileData.bio ?? ''}
+            onChange={handleChange}
+            placeholder="Bio"
+        />
+        <input
+            type="text"
+            name="location"
+            value={profileData.location ?? ''}
+            onChange={handleChange}
+            placeholder="Location"
+        />
+        <input
+            type="text"
+            name="facebook"
+            value={profileData.facebook ?? ''}
+            onChange={handleChange}
+            placeholder="Facebook"
+        />
+        <input
+            type="text"
+            name="instagram"
+            value={profileData.instagram ?? ''}
+            onChange={handleChange}
+            placeholder="Instagram"
+        />
+        <button type="submit">Update Profile</button>
+    </form>
+    
+
     );
 }
 
