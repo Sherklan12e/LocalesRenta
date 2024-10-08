@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams ,useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function Profile() {
-
+    const navigate = useNavigate();
     const token = localStorage.getItem('access_token'); 
     const { username } = useParams();
     const [profileData, setProfileData] = useState({
@@ -48,7 +48,7 @@ function Profile() {
     const handleSubmit = async (e) => {
         e.preventDefault();
     
-        // Use FormData to handle the file upload
+        // Usamos FormData para manejar el envío de archivos
         const formData = new FormData();
         formData.append('username', profileData.username);
         formData.append('bio', profileData.bio);
@@ -56,29 +56,30 @@ function Profile() {
         formData.append('facebook', profileData.facebook);
         formData.append('instagram', profileData.instagram);
     
-        // Only append profile_picture if a file was selected
-        if (profileData.profile_picture) {
-            formData.append('profile_picture', profileData.profile_picture); // Append picture if exists
+        // Solo agregamos profile_picture si el usuario seleccionó una nueva imagen
+        if (profileData.profile_picture instanceof File) {
+            formData.append('profile_picture', profileData.profile_picture);
         }
     
         try {
             await axios.put(`http://127.0.0.1:8000/api/profile/${username}/update/`, formData, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'multipart/form-data', // Important for file uploads
+                    'Content-Type': 'multipart/form-data', // Deja que axios maneje esto
                 },
             });
-            alert('Profile updated successfully!');
+            alert('¡Perfil actualizado con éxito!');
+            navigate(-1)
         } catch (error) {
-            console.error('There was an error updating the profile!', error.response?.data);
-            alert('Error updating profile: ' + (error.response?.data.detail || 'Unknown error'));
+            console.error('Error al actualizar el perfil:', error.response?.data);
+            alert('Error actualizando perfil: ' + (error.response?.data.detail || 'Error desconocido'));
         }
     };
     
     
-    console.log(profileData.profile_picture); // should log the File object, not just the name
+    
+    console.log(profileData.profile_picture); 
    
-    console.log(profileData.profile_picture); // Should output a File object
 
     return (
         <form onSubmit={handleSubmit} encType="multipart/form-data">
@@ -113,18 +114,20 @@ function Profile() {
             placeholder="Location"
         />
         <input
-            type="text"
+            type="url"
             name="facebook"
             value={profileData.facebook ?? ''}
             onChange={handleChange}
-            placeholder="Facebook"
+            placeholder="https://facebook/usuario1"
+            
         />
         <input
-            type="text"
+            type="url"
             name="instagram"
             value={profileData.instagram ?? ''}
             onChange={handleChange}
-            placeholder="Instagram"
+            placeholder="https://instagram/usuario1" 
+        
         />
         <button type="submit">Update Profile</button>
     </form>

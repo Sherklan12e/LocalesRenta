@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { RiInstagramFill,RiFacebookCircleFill } from "react-icons/ri";
-import { useParams , useNavigate} from 'react-router-dom';
+import { useParams , useNavigate, Link} from 'react-router-dom';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 function Profile() {
@@ -68,7 +68,7 @@ function Profile() {
                     
                     <img
                         className="w-24 h-24 rounded-full object-cover border-4 border-gray-300"
-                        src={profile.profile_picture} // Imagen de perfil aleatoria
+                        src={profile.profile_picture} 
                         alt="Profile"
                     />
 
@@ -97,16 +97,16 @@ function Profile() {
                     </p>
                 </div>
 
-                <div>
-                    <div className="mt-6">
-                        <a href=""> <RiInstagramFill  className=' text-3xl' /></a>
+                <div className='flex'>
+                    <div className="mt-6 text-red-500">
+                        <a href={profile.instagram} target='_blank'> <RiInstagramFill  className=' text-3xl' /></a>
                     </div>
                     
-                    <div className="mt-6">
-                        <a href="">   <RiFacebookCircleFill className='text-3xl'  /> </a>
+                    <div className="text-blue-500 mt-6">
+                        <a href={profile.facebook}     target='_blank'>   <RiFacebookCircleFill className='text-3xl'  /> </a>
                     </div>
                 </div>
-                <a href="">Editar</a>
+                <Link to='edit'>Editar Perfil </Link>
 
                 <div className="mt-6 flex justify-center">
                     <button className="bg-blue-500 text-white py-2 px-6 rounded-full hover:bg-blue-600">

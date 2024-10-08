@@ -17,7 +17,7 @@ import EditProfile from './components/Usuarios/EditarProfile';
 function App() {
   return (
     <Router>
-      <Navbar />
+      <Navbar />carlos
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
