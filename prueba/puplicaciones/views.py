@@ -6,6 +6,8 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.core.files.storage import default_storage
+from django.db.models import Q
+from rest_framework import generics
 
 class ImagenAlquilerViewSet(viewsets.ModelViewSet):
     queryset = ImagenAlquiler.objects.all()
@@ -76,3 +78,32 @@ class AlquilerListView(generics.ListAPIView):
     queryset = Alquiler.objects.all().order_by('-fecha_publicacion')
     serializer_class = AlquilerSerializer
     permission_classes = [AllowAny] 
+
+class AlquilerSearchView(generics.ListAPIView):
+    serializer_class = AlquilerSerializer
+    permission_classes = [IsAuthenticated]
+    def get_queryset(self):
+        queryset = Alquiler.objects.all()
+        query = self.request.query_params.get('q', '')
+        min_price = self.request.query_params.get('min_price')
+        max_price = self.request.query_params.get('max_price')
+        location = self.request.query_params.get('location')
+        property_type = self.request.query_params.get('property_type')
+
+        if query:
+            queryset = queryset.filter(
+                Q(titulo__icontains=query) |
+                Q(descripcion__icontains=query) |
+                Q(ubicacion__icontains=query)
+            )
+
+        if min_price:
+            queryset = queryset.filter(precio__gte=float(min_price))
+        if max_price:
+            queryset = queryset.filter(precio__lte=float(max_price))
+        if location:
+            queryset = queryset.filter(ubicacion__icontains=location)
+        if property_type:
+            queryset = queryset.filter(tipo_propiedad__iexact=property_type)
+
+        return queryset

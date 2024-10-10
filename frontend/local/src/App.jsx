@@ -13,11 +13,11 @@ import EditarAlquiler from './components/publicaciones/EditarAlquiler';
 import DetalleAlquiler from './components/publicaciones/DetallesAlquiler';
 import Profile from './components/Usuarios/Profile';
 import EditProfile from './components/Usuarios/EditarProfile';
-
+import SearchResults from './components/publicaciones/SearchResults';
 function App() {
   return (
     <Router>
-      <Navbar />carlos
+      <Navbar />
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -30,7 +30,7 @@ function App() {
         <Route path="/profile/:username" element={<Profile />} />
         <Route path="/profile/:username/edit" element={<EditProfile />} />
         <Route path="/edi" element={<EditProfile/>} />
-        {/* Define otras rutas aquí */}
+        <Route path="/search" element={<SearchResults />} />
       </Routes>
       <Footer />
     </Router>

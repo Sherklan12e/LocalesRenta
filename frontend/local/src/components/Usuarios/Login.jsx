@@ -17,19 +17,37 @@ const Login = () => {
                 username,
                 password
             });
-
+    
             localStorage.setItem('access_token', response.data.access);
             localStorage.setItem('refresh_token', response.data.refresh);
             localStorage.setItem('username', username);
             localStorage.setItem('id', response.data.id);
             
-            // Guardamos un valor en localStorage para mostrar el mensaje una sola vez
-            localStorage.setItem('loggedIn', 'true');
-            
+            // Show success toast notification
+            toast.success('¡Inicio de sesión exitoso!', {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+    
             setMessage('Login successful!');
-            navigate('/'); 
-            window.location.reload()
+            navigate('/');
+            window.location.reload();
         } catch (error) {
+            // Show error toast notification
+            toast.error('Error al iniciar sesión. Por favor, verifica tus credenciales.', {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
             setMessage('Login failed. Please check your credentials.');
         }
     };

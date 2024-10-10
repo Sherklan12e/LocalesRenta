@@ -1,220 +1,238 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { AiOutlineSearch } from "react-icons/ai"; 
-import { Link, useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { AiOutlineSearch, AiOutlineMenu, AiOutlineClose, AiOutlineHome, AiOutlineUser, AiOutlinePlus, AiOutlineLogout } from "react-icons/ai";
+import { FaFilter } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
+import axios from "axios";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Navbar = () => {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [isProfileMenuOpen, setProfileMenuOpen] = useState(false);
-    const username = localStorage.getItem('username');
-    const [profile, setProfile] = useState(null);
-    const navigate = useNavigate();
+    const [isFilterMenuOpen, setFilterMenuOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
-
-    const loggedIn = localStorage.getItem('loggedIn');
-//    const [isLogout, setIsLogout] = useState(false);
-
+    const [profile, setProfile] = useState(null);
+    const [filterOptions, setFilterOptions] = useState({
+        minPrice: "",
+        maxPrice: "",
+        location: "",
+        propertyType: ""
+    });
+    const navigate = useNavigate();
+    const username = localStorage.getItem('username');
     const token = localStorage.getItem('access_token');
-    const toggleMenu = () => {
-        setIsOpen(!isOpen);
-    };
-    
-    
-    const showToastMessage = () => {
-        toast.success("Success Notification !", {
-          position: toast.POSITION.TOP_RIGHT,
-        });
-    };
+    const location = useLocation();
+
     useEffect(() => {
-        
-        // Si está logueado y es la primera vez, mostramos el mensaje
-        if (loggedIn === 'true') {
-            toast.success('Bienvenido ❤️', { position: 'top-right' });
-            localStorage.removeItem('loggedIn');  // Lo removemos para que no se muestre nuevamente
-        }
-        if (loggedIn === 'false'){
-            console.log("salio1")
-            toast.warning('Bienvenido ', { position: 'top-right' });
-        }
-        
-
-        setIsLoggedIn(!!localStorage.getItem('access_token')); // Verificamos si hay un token
-    }, []);
-
-
-
-
-    
-
-
-
-
-
-
-   
+        setProfileMenuOpen(false);
+        setIsOpen(false);
+    }, [location]);
     useEffect(() => {
-        if (!token){
-            console.error("Token no encontrada perra , por favor logeate");
-            return;
+        if (token) {
+            axios.get(`http://127.0.0.1:8000/api/profile/${username}/`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            })
+            .then(response => setProfile(response.data))
+            .catch(error => console.error('Error fetching profile:', error));
         }
-       
-        axios.get(`http://127.0.0.1:8000/api/profile/${username}/`,{
-            headers: {
-                'Authorization' : `Bearer ${token}`
-            }
-        })
-        .then (response => {
-            setProfile(response.data);
-        }) 
-        .catch(error => {
-            console.log('error al perdir fecht', error)
-            setProfile(null)
-        });
+    }, [username, token]);
 
-    }, [username])
-   
-    
-    const toggleProfileMenu = () => {
-        setProfileMenuOpen(!isProfileMenuOpen);
+    const handleSearch = (e) => {
+        e.preventDefault();
+        const queryParams = new URLSearchParams({
+            q: searchQuery,
+            min_price: filterOptions.minPrice,
+            max_price: filterOptions.maxPrice,
+            location: filterOptions.location,
+            property_type: filterOptions.propertyType
+        }).toString();
+        navigate(`/search?${queryParams}`);
     };
-    
 
+    const handleFilterChange = (e) => {
+        const { name, value } = e.target;
+        setFilterOptions(prev => ({ ...prev, [name]: value }));
+    };
 
-    let logoutuser = false; 
     const logout = () => {
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
         localStorage.removeItem('username');
-        logoutuser = true;
-        setProfile(null); 
-        navigate('/login');
-        if (logoutuser) {
-            console.log("Usuario deslogueado");
-            logoutuser = false;
-            console.log(logoutuser);
-        } else {
-            console.log(logoutuser);
-        }
+        setProfile(null);
+        toast.success('Has cerrado sesión exitosamente', {
+            position: "top-center",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+        navigate('/');
     };
-    
-
-
-
-    
-    const handleSearch = (e) => {
-        e.preventDefault();
-        // Manejar la búsqueda, por ejemplo, redirigiendo a una página de resultados
-        navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
-    }; 
-    
-    
-  
-
 
     return (
-        <>     
-        <nav className="bg-black p-4 relative">
-            <div className="container mx-auto flex items-center justify-between">
-                {/* Logo */}
-                <div className="text-white text-xl font-bold">
-                    <Link to="/">Rent</Link>
-                </div>
-                <div>
-               
+        <nav className="bg-gradient-to-r from-blue-600 to-purple-600 p-4 shadow-lg">
+            <div className="container mx-auto flex justify-between items-center">
+                <Link to="/" className="text-white text-xl font-bold flex items-center">
+                    <AiOutlineHome className="mr-2" />
+                    Rent
+                </Link>
+                <ToastContainer position="top-center" autoClose={3000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
+                <div className="hidden md:flex items-center space-x-4 flex-grow justify-center">
+                    <Link to="/Alquileres" className="text-white hover:text-gray-200 transition duration-300">Locales</Link>
+                    <div className="relative flex items-center">
+                        <form onSubmit={handleSearch} className="flex items-center">
+                            <input
+                                type="text"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                placeholder="Buscar..."
+                                className="px-4 py-2 rounded-l-full text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-300 w-64"
+                            />
+                            <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-r-full hover:bg-blue-600 transition duration-300">
+                                <AiOutlineSearch className="text-xl" />
+                            </button>
+                        </form>
+                        <button 
+                            onClick={() => setFilterMenuOpen(!isFilterMenuOpen)} 
+                            className="ml-2 bg-purple-500 text-white p-2 rounded-full hover:bg-purple-600 transition duration-300"
+                        >
+                            <FaFilter />
+                        </button>
+                        <AnimatePresence>
+                            {isFilterMenuOpen && (
+                                <motion.div
+                                    initial={{ opacity: 0, y: -10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -10 }}
+                                    className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-xl py-2 z-10 top-full"
+                                >
+                                    <input
+                                        type="number"
+                                        name="minPrice"
+                                        value={filterOptions.minPrice}
+                                        onChange={handleFilterChange}
+                                        placeholder="Precio mínimo"
+                                        className="block w-full px-4 py-2 text-gray-800 border-b border-gray-200"
+                                    />
+                                    <input
+                                        type="number"
+                                        name="maxPrice"
+                                        value={filterOptions.maxPrice}
+                                        onChange={handleFilterChange}
+                                        placeholder="Precio máximo"
+                                        className="block w-full px-4 py-2 text-gray-800 border-b border-gray-200"
+                                    />
+                                    <input
+                                        type="text"
+                                        name="location"
+                                        value={filterOptions.location}
+                                        onChange={handleFilterChange}
+                                        placeholder="Ubicación"
+                                        className="block w-full px-4 py-2 text-gray-800 border-b border-gray-200"
+                                    />
+                                    <select
+                                        name="propertyType"
+                                        value={filterOptions.propertyType}
+                                        onChange={handleFilterChange}
+                                        className="block w-full px-4 py-2 text-gray-800"
+                                    >
+                                        <option value="">Tipo de propiedad</option>
+                                        <option value="casa">Casa</option>
+                                        <option value="apartamento">Apartamento</option>
+                                        <option value="local">Local comercial</option>
+                                    </select>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
                 </div>
 
-                
-                <div className="hidden md:flex space-x-6">
-                    <Link to="/Alquileres" className="text-white hover:text-gray-300">Locales</Link>
-                    <form onSubmit={handleSearch} className="relative flex items-center">
-                        <input
-                            type="text"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="Search..."
-                            className="px-2 py-1 h-9 rounded-lg text-black placeholder-gray-400"
-                        />
-                        <button type="submit" className="absolute right-2">
-                            <AiOutlineSearch className="text-white text-xl" />
-                        </button>
-                    </form>
-                </div>
-                {/* Profile/Sign in */}
-                <div className="flex items-center space-x-4">
+                <div className="hidden md:flex items-center space-x-4">
                     {profile ? (
-                        <>
-                            <div className="relative">
-                                <img
-                                    src={profile.profile_picture}
-                                    alt="profile"
-                                    className="w-10 h-10 rounded-full border-1 border-white cursor-pointer"
-                                    onClick={toggleProfileMenu}
-                                />
+                        <div className="relative">
+                            <motion.img
+                                whileHover={{ scale: 1.1 }}
+                                src={profile.profile_picture}
+                                alt="Profile"
+                                className="w-10 h-10 rounded-full cursor-pointer border-2 border-white"
+                                onClick={() => setProfileMenuOpen(!isProfileMenuOpen)}
+                            />
+                            <AnimatePresence>
                                 {isProfileMenuOpen && (
-                                    <div className="absolute right-0 mt-2 w-48 bg-white text-black rounded-lg shadow-lg py-2 z-10">
-                                        <Link to={`/profile/${username}/`} className="block px-4 py-2 hover:bg-gray-200">Profile</Link>
-                                        <Link to="/publicar" className="block w-full text-left px-4 py-2 hover:bg-gray-200">Publicar</Link>
-                                        <button onClick={logout} className="block w-full text-left px-4 py-2 hover:bg-gray-200">Logout</button>
-                                    </div>
+                                    <motion.div
+                                        initial={{ opacity: 0, y: -10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -10 }}
+                                        className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-2 z-10"
+                                    >
+                                        <Link to={`/profile/${username}`} className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                                            <AiOutlineUser className="inline-block mr-2" />
+                                            Perfil
+                                        </Link>
+                                        <Link to="/publicar" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                                            <AiOutlinePlus className="inline-block mr-2" />
+                                            Publicar
+                                        </Link>
+                                        <button onClick={logout} className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100">
+                                            <AiOutlineLogout className="inline-block mr-2" />
+                                            Cerrar sesión
+                                        </button>
+                                    </motion.div>
                                 )}
-                            </div>
-                            <Link to="/post" className="text-white hover:text-gray-300">Post</Link>
-                        </>
+                            </AnimatePresence>
+                        </div>
                     ) : (
                         <>
-                            <Link to="/login" className="text-white hover:text-gray-300">Login</Link>
-                            <Link to="/register" className="text-white hover:text-gray-300">Register</Link>
+                            <Link to="/login" className="text-white hover:text-gray-200 transition duration-300">Iniciar sesión</Link>
+                            <Link to="/register" className="bg-white text-blue-500 px-4 py-2 rounded-full hover:bg-gray-100 transition duration-300">Registrarse</Link>
                         </>
                     )}
                 </div>
 
-                {/* Mobile Menu Button */}
-                <button
-                    className="md:hidden text-white focus:outline-none"
-                    onClick={toggleMenu}
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M4 6h16M4 12h16m-7 6h7"
-                        />
-                    </svg>
-                </button>
+                <div className="md:hidden">
+                    <button onClick={() => setIsOpen(!isOpen)} className="text-white focus:outline-none">
+                        {isOpen ? <AiOutlineClose size={24} /> : <AiOutlineMenu size={24} />}
+                    </button>
+                </div>
             </div>
 
-            {/* Mobile Menu */}
-            {isOpen && (
-                <div className="md:hidden mt-4 bg-blue-600">
-                    <Link to="/" className="block py-2 px-4 text-white hover:bg-blue-500">Home</Link>
-                    <Link to="/about" className="block py-2 px-4 text-white hover:bg-blue-500">About</Link>
-                    <Link to="/contact" className="block py-2 px-4 text-white hover:bg-blue-500">Contact</Link>
-                    {username ? (
-                        <>
-                            <Link to="/profile" className="block py-2 px-4 text-white hover:bg-blue-500">Profile</Link>
-                            <button onClick={() => { logout(); }}  className="block w-full py-2 px-4 text-left text-white hover:bg-blue-500">Logout</button>
-                        </>
-                    ) : (
-                        <>
-                            <Link to="/login" className="block py-2 px-4 text-white hover:bg-blue-500">Login</Link>
-                            <Link to="/register" className="block py-2 px-4 text-white hover:bg-blue-500">Register</Link>
-                        </>
-                    )}
-                </div>
-            )}
+            <AnimatePresence>
+                {isOpen && (
+                    <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="md:hidden bg-blue-600 mt-2 rounded-lg shadow-lg"
+                    >
+                        <Link to="/Alquileres" className="block py-2 px-4 text-white hover:bg-blue-700">Locales</Link>
+                        <form onSubmit={handleSearch} className="px-4 py-2">
+                            <input
+                                type="text"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                placeholder="Buscar..."
+                                className="w-full px-4 py-2 rounded-full text-gray-800 focus:outline-none"
+                            />
+                        </form>
+                        {profile ? (
+                            <>
+                                <Link to={`/profile/${username}`} className="block py-2 px-4 text-white hover:bg-blue-700">Perfil</Link>
+                                <Link to="/publicar" className="block py-2 px-4 text-white hover:bg-blue-700">Publicar</Link>
+                                <button onClick={logout} className="block w-full text-left py-2 px-4 text-white hover:bg-blue-700">Cerrar sesión</button>
+                            </>
+                        ) : (
+                            <>
+                                <Link to="/login" className="block py-2 px-4 text-white hover:bg-blue-700">Iniciar sesión</Link>
+                                <Link to="/register" className="block py-2 px-4 text-white hover:bg-blue-700">Registrarse</Link>
+                            </>
+                        )}
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </nav>
-        <ToastContainer />
-        </>
     );
 };
 

@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { VscKebabVertical } from "react-icons/vsc";
+import { FaMapMarkerAlt, FaBed, FaBath, FaRuler } from "react-icons/fa";
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { jwtDecode } from "jwt-decode";
+import { motion, AnimatePresence } from 'framer-motion';
+
 const ListaAlquileres = () => {
     const [alquileres, setAlquileres] = useState([]);
     const [showModal, setShowModal] = useState(false);
@@ -11,18 +14,11 @@ const ListaAlquileres = () => {
     const navigate = useNavigate();
     const token = localStorage.getItem('access_token');
     const { username } = useParams();
-    // sacar datos del usuario 
     let userId = null;
-    if (token){
+    if (token) {
         const descodificado = jwtDecode(token);
         userId = descodificado.user_id;
     }
-
-    
-
-
-
-
 
     useEffect(() => {
         const fetchAlquileres = async () => {
@@ -73,91 +69,108 @@ const ListaAlquileres = () => {
     };
 
     return (
-        <div>
-            <div className="container mx-auto px-4 m-2">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="bg-gray-100 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-7xl mx-auto">
+                <h1 className="text-4xl font-bold text-gray-900 mb-10 text-center">Alquileres Disponibles</h1>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                     {alquileres.map(alquiler => (
-                        <div key={alquiler.id} className="max-w-sm mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
-                            {/* Contenedor relativo para la imagen y el botón */}
+                        <motion.div
+                            key={alquiler.id}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.3 }}
+                            className="bg-white rounded-xl shadow-lg overflow-hidden transform transition duration-300 hover:scale-105"
+                        >
                             <div className="relative">
-                                {/* Imagen con click handler */}
-                                {alquiler.imagenes && alquiler.imagenes.length > 0 ? (
-                                    <img 
-                                        onClick={() => handleDetalle(alquiler.id)} 
-                                        className="w-full h-58 object-cover" 
-                                        src={alquiler.imagenes[0].imagen} // Asumiendo que tomas la primera imagen
-                                        alt={alquiler.titulo}
-                                    />
-                                ) : (
-                                    <img 
-                                        onClick={() => handleDetalle(alquiler.id)} 
-                                        src="https://www.dropbox.com/scl/fi/qp9v9jfykx02wla9l8jrf/35a4098a7a089a791cc381ee7bdd2dc2.jpg?rlkey=ff5y2muw14ra5rh57k4wcy50n&st=v1o9im3c&dl=1"
-                                        alt="Imagen por defecto"
-                                    />
-                                )}
-                                {/* Botón en la esquina superior derecha */}
+                                <img 
+                                    onClick={() => handleDetalle(alquiler.id)} 
+                                    className="w-full h-64 object-cover cursor-pointer" 
+                                    src={alquiler.imagenes && alquiler.imagenes.length > 0 ? alquiler.imagenes[0].imagen : "https://www.dropbox.com/scl/fi/qp9v9jfykx02wla9l8jrf/35a4098a7a089a791cc381ee7bdd2dc2.jpg?rlkey=ff5y2muw14ra5rh57k4wcy50n&st=v1o9im3c&dl=1"}
+                                    alt={alquiler.titulo}
+                                />
                                 <button 
                                     onClick={() => openModal(alquiler)} 
-                                    className="absolute top-2 right-2 text-white text-center"
+                                    className="absolute top-2 right-2 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 transition duration-300"
                                 >
-                                    <VscKebabVertical size={24} />
+                                    <VscKebabVertical size={20} className="text-gray-600" />
                                 </button>
-                            </div>
-                            {/* Detalles del alquiler */}
-                            <div className="p-6">
-                                <h2 className="text-xl font-bold text-gray-800">{alquiler.titulo}</h2>
-                                <p className="text-lg font-semibold text-green-600 mt-2">${alquiler.precio}</p>
-                                <div className="mt-4">
-                                    <p className="text-gray-600"><strong>País:</strong> {alquiler.country}</p>
+                                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
+                                    <h2 className="text-xl font-bold text-white">{alquiler.titulo}</h2>
+                                    <p className="text-sm text-gray-300 flex items-center mt-1">
+                                        <FaMapMarkerAlt className="mr-1" /> {alquiler.ubicacion}
+                                    </p>
                                 </div>
                             </div>
-                        </div>
+                            <div className="p-6">
+                                <p className="text-2xl font-bold text-green-600 mb-4">${alquiler.precio}/mes</p>
+                                <div className="flex justify-between text-sm text-gray-600 mb-4">
+                                    <span className="flex items-center"><FaBed className="mr-1" /> {alquiler.num_habitaciones} hab</span>
+                                    <span className="flex items-center"><FaBath className="mr-1" /> {alquiler.num_banos} baños</span>
+                                    <span className="flex items-center"><FaRuler className="mr-1" /> {alquiler.superficie} m²</span>
+                                </div>
+                                <button
+                                    onClick={() => handleDetalle(alquiler.id)}
+                                    className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300"
+                                >
+                                    Ver detalles
+                                </button>
+                            </div>
+                        </motion.div>
                     ))}
                 </div>
             </div>
 
-            {/* Modal */} 
-            {showModal && selectedAlquiler && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                    <div className="bg-white rounded-lg shadow-lg w-80 p-6">
-                        <h3 className="text-lg font-bold mb-4">Opciones</h3>
-                        <div className="mt-4 flex justify-between">
-                            {console.log(selectedAlquiler.user , "id del usuario")}
-                            
-                           
-                                <> 
-                                    {/* <button
-                                        onClick={() => {
-                                            handleEdit(selectedAlquiler.id);
-                                            closeModal();
-                                        }}
-                                        className="bg-blue-500 text-white text-sm font-semibold px-4 py-2 rounded hover:bg-blue-600"
-                                    >
-                                        Editar
-                                    </button> */}
-                                        {userId === selectedAlquiler.user && (
-                                        <button
-                                                onClick={() => {
-                                                    handleDelete(selectedAlquiler.id);
-                                                    closeModal();
-                                                }}
-                                                className="bg-red-500 text-white text-sm font-semibold px-4 py-2 rounded hover:bg-red-600"
-                                            >
-                                                Eliminar
-                                            </button>
-                                        )}
-
-                                </>
-                        </div>
-                        <button
-                            onClick={closeModal}
-                            className="mt-4 w-full bg-gray-300 text-gray-800 py-2 rounded hover:bg-gray-400"
+            <AnimatePresence>
+                {showModal && selectedAlquiler && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+                        onClick={closeModal}
+                    >
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md"
+                            onClick={(e) => e.stopPropagation()}
                         >
-                            Cancelar
-                        </button>
-                    </div>
-                </div>
-            )}
+                            <h3 className="text-2xl font-bold mb-4 text-gray-800">Opciones</h3>
+                            <div className="space-y-4">
+                                {userId === selectedAlquiler.user && (
+                                    <>
+                                        <button
+                                            onClick={() => {
+                                                handleEdit(selectedAlquiler.id);
+                                                closeModal();
+                                            }}
+                                            className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-300"
+                                        >
+                                            Editar
+                                        </button>
+                                        <button
+                                            onClick={() => {
+                                                handleDelete(selectedAlquiler.id);
+                                                closeModal();
+                                            }}
+                                            className="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition duration-300"
+                                        >
+                                            Eliminar
+                                        </button>
+                                    </>
+                                )}
+                                <button
+                                    onClick={closeModal}
+                                    className="w-full bg-gray-300 text-gray-800 py-2 rounded-lg hover:bg-gray-400 transition duration-300"
+                                >
+                                    Cancelar
+                                </button>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 };
