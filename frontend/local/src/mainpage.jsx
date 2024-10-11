@@ -62,13 +62,13 @@ const MainPage = () => {
               <input
                 type="text"
                 placeholder="Buscar por ubicación, tipo de propiedad..."
-                className="w-full md:w-96 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full md:w-96 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-color_turquesa1"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
               <button
                 type="submit"
-                className="w-full md:w-auto bg-blue-600 text-white p-4 rounded-lg hover:bg-blue-700 transition duration-300 flex items-center justify-center"
+                className="w-full md:w-auto bg-color_turquesa6 text-white p-4 rounded-lg hover:bg-color_turquesa1 transition duration-300 flex items-center justify-center"
               >
                 <FaSearch className="mr-2" />
                 Buscar

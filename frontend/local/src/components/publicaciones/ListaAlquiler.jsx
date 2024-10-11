@@ -5,7 +5,8 @@ import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { jwtDecode } from "jwt-decode";
 import { motion, AnimatePresence } from 'framer-motion';
-
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 const ListaAlquileres = () => {
     const [alquileres, setAlquileres] = useState([]);
     const [showModal, setShowModal] = useState(false);
@@ -82,14 +83,19 @@ const ListaAlquileres = () => {
                             className="bg-white rounded-xl shadow-lg overflow-hidden transform transition duration-300 hover:scale-105"
                         >
                             <div className="relative">
-                                <img 
-                                    onClick={() => handleDetalle(alquiler.id)} 
-                                    className="w-full h-64 object-cover cursor-pointer" 
-                                    src={alquiler.imagenes && alquiler.imagenes.length > 0 ? alquiler.imagenes[0].imagen : "https://www.dropbox.com/scl/fi/qp9v9jfykx02wla9l8jrf/35a4098a7a089a791cc381ee7bdd2dc2.jpg?rlkey=ff5y2muw14ra5rh57k4wcy50n&st=v1o9im3c&dl=1"}
-                                    alt={alquiler.titulo}
-                                />
-                                <button 
-                                    onClick={() => openModal(alquiler)} 
+                            <div className="aspect-w-16 aspect-h-9">
+                            <LazyLoadImage
+                                onClick={() => handleDetalle(alquiler.id)}
+                                className="w-full h-full object-cover cursor-pointer"
+                                src={alquiler.imagenes && alquiler.imagenes.length > 0 ? alquiler.imagenes[0].imagen : "https://www.dropbox.com/scl/fi/qp9v9jfykx02wla9l8jrf/35a4098a7a089a791cc381ee7bdd2dc2.jpg?rlkey=ff5y2muw14ra5rh57k4wcy50n&st=v1o9im3c&dl=1"}
+                                alt={alquiler.titulo}
+                                effect="blur"
+                                placeholderSrc="https://via.placeholder.com/400x300?text=Loading..."
+                            />
+                            </div>
+
+                                <button
+                                    onClick={() => openModal(alquiler)}
                                     className="absolute top-2 right-2 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 transition duration-300"
                                 >
                                     <VscKebabVertical size={20} className="text-gray-600" />

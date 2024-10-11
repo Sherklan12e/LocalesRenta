@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
+import './css/index.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './components/Usuarios/Login';
 import Register from './components/Usuarios/Register';
 import Home from './mainpage';
 import Navbar from './components/Layouts/Navbar';
 import Footer from './components/Layouts/Footer';
-import Post from './components/post/Post';
-import ListaAlquileres from './components/publicaciones/ListaAlquiler';
+import Post from './components/post/Post'
 
+
+const ListaAlquileres = lazy(() => import('./components/publicaciones/ListaAlquiler'));
+import LoadingSpinner from './components/publicaciones/LoadingSpinner';
 import CrearPublicacion from './components/publicaciones/CrearAlquiler';
 import EditarAlquiler from './components/publicaciones/EditarAlquiler';
 import DetalleAlquiler from './components/publicaciones/DetallesAlquiler';
@@ -24,7 +27,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/post" element={<Post />} />
         <Route path="/publicar" element={<CrearPublicacion />} />
-        <Route path="/Alquileres" element={<ListaAlquileres />} />
+        <Route path="/Alquileres" element={<Suspense fallback={<LoadingSpinner />}><ListaAlquileres /></Suspense>} />
         <Route path="/editar-alquiler/:id" element={<EditarAlquiler />} />
         <Route path="/detalle-alquiler/:id" element={<DetalleAlquiler />} />
         <Route path="/profile/:username" element={<Profile />} />

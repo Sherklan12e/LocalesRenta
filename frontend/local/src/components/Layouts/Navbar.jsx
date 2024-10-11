@@ -73,7 +73,7 @@ const Navbar = () => {
     };
 
     return (
-        <nav className="bg-gradient-to-r from-blue-600 to-purple-600 p-4 shadow-lg">
+        <nav className="bg-color_turquesa6 p-4 shadow-lg">
             <div className="container mx-auto flex justify-between items-center">
                 <Link to="/" className="text-white text-xl font-bold flex items-center">
                     <AiOutlineHome className="mr-2" />
