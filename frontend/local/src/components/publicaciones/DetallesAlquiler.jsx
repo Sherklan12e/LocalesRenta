@@ -130,10 +130,11 @@ const DetalleAlquiler = () => {
                 <div className="mt-8 bg-white shadow-xl rounded-lg p-6">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4">
+                            {console.log(alquiler.username)}
                             <img src={alquiler.user_profile_image || "https://via.placeholder.com/50"} alt="User Profile" className="w-12 h-12 rounded-full" />
                             <div>
                                 <h3 className="text-xl font-semibold">{alquiler.user_name}</h3>
-                                <p className="text-gray-600">Propietario</p>
+                                <p className="text-gray-600">{alquiler.username}</p>
                             </div>
                         </div>
                         <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 flex items-center">

@@ -32,12 +32,17 @@ class PostSerializer(serializers.ModelSerializer):
 
 
 class ProfileSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username')
+    profile_picture = serializers.ImageField(required=False)
+
     class Meta:
         model = Profile
-        fields = ['username', 'bio', 'location', 'facebook', 'instagram', 'profile_picture']
+        fields = ['username', 'bio', 'profile_picture', 'location', 'facebook', 'instagram']
 
     def update(self, instance, validated_data):
-        profile_picture = validated_data.pop('profile_picture', None)
-        if profile_picture:
-            instance.profile_picture = profile_picture
+        user_data = validated_data.pop('user', {})
+        if 'username' in user_data:
+            instance.user.username = user_data['username']
+            instance.user.save()
+
         return super().update(instance, validated_data)

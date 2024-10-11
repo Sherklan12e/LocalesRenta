@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { FaSearch, FaBed, FaBath, FaRuler, FaMapMarkerAlt } from 'react-icons/fa';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Typewriter } from 'react-simple-typewriter';
 
 const MainPage = () => {
   const [alquileres, setAlquileres] = useState([]);
   const [featuredAlquileres, setFeaturedAlquileres] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
-
+  const [currentPhrase, setCurrentPhrase] = useState(0);
+  const phrases = ["hogar ideal", "departamento", "local", "piso"];
   useEffect(() => {
     const fetchAlquileres = async () => {
       try {
@@ -24,6 +26,16 @@ const MainPage = () => {
     fetchAlquileres();
   }, []);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentPhrase((prev) => (prev + 1) % phrases.length);
+    }, 5000); // Change phrase every 5 seconds
+  
+    return () => clearInterval(interval);
+  }, []);
+
+
+
   const handleDetalle = (id) => {
     navigate(`/detalle-alquiler/${id}`);
   };
@@ -34,7 +46,7 @@ const MainPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-color_turquesa7">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -44,14 +56,20 @@ const MainPage = () => {
       >
         <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="text-center">
-            <motion.h1
-              initial={{ y: -50, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.5, duration: 0.8 }}
-              className="text-4xl md:text-6xl text-white font-bold mb-8"
-            >
-              Encuentra tu hogar ideal
-            </motion.h1>
+          <h1 className="text-4xl md:text-6xl text-white font-bold mb-8">
+            Encuentra tu{' '}
+              <span className="text-color_turquesa1">
+                <Typewriter
+                  words={['hogar ideal', 'departamento', 'local', 'piso']}
+                  loop={0}
+                  cursor
+                  cursorStyle='|'
+                  typeSpeed={70}
+                  deleteSpeed={50}
+                  delaySpeed={1000}
+                />
+              </span>
+            </h1>
             <motion.form
               initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -83,18 +101,18 @@ const MainPage = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="text-3xl md:text-4xl font-bold mb-8 text-center text-gray-800"
+          className="text-3xl md:text-4xl font-bold mb-8 text-center text-black"
         >
           Propiedades destacadas
         </motion.h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 ">
           {featuredAlquileres.map((alquiler, index) => (
             <motion.div
               key={alquiler.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="bg-white shadow-lg rounded-lg overflow-hidden transform transition duration-300 hover:scale-105"
+              className="bg-color_turquesa1  border-solid border-2 border-sky-500  shadow-lg rounded-lg overflow-hidden transform transition duration-300 hover:scale-105"
             >
               <img
                 onClick={() => handleDetalle(alquiler.id)}

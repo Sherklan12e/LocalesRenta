@@ -12,6 +12,7 @@ export default {
         color_turquesa4:'#84f4ef',
         color_turquesa5:'#a5ffff',
         color_turquesa6:'#0a6067',
+        color_turquesa7:'#3f8c8c',
        
        }
     },

@@ -3,11 +3,11 @@ import axios from 'axios';
 import { apiRequestWithTokenRefresh } from '../../auth';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FaHome, FaMoneyBillWave, FaMapMarkerAlt, FaBed, FaBath, FaCar, FaWifi, FaSnowflake, FaDog, FaSwimmingPool, FaBuilding  ,FaHouseUser,FaRegFlag, FaTimes} from 'react-icons/fa';
-import { MdTitle, MdDescription, MdSquareFoot, MdCalendarToday ,MdChair,MdYard,MdOutlineBalcony} from 'react-icons/md';
+import { FaHome, FaMoneyBillWave, FaMapMarkerAlt, FaBed, FaBath, FaCar, FaWifi, FaSnowflake, FaDog, FaSwimmingPool, FaBuilding, FaHouseUser, FaRegFlag, FaTimes } from 'react-icons/fa';
+import { MdTitle, MdDescription, MdSquareFoot, MdCalendarToday, MdChair, MdYard, MdOutlineBalcony } from 'react-icons/md';
+
 const CrearAlquiler = () => {
     const [selectedImages, setSelectedImages] = useState([]);
-    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         titulo: '',
         descripcion: '',
@@ -30,6 +30,9 @@ const CrearAlquiler = () => {
         country: '',
         imagenes: []
     });
+    const [showAlert, setShowAlert] = useState(false); // Estado para controlar la alerta
+    const navigate = useNavigate();
+
     const handleImageChange = (e) => {
         const files = Array.from(e.target.files);
         setSelectedImages(prevImages => [...prevImages, ...files]);
@@ -38,6 +41,7 @@ const CrearAlquiler = () => {
             imagenes: [...prevData.imagenes, ...files]
         }));
     };
+
     const handleChange = (e) => {
         const { name, value, type, checked, files } = e.target;
         if (type === 'checkbox') {
@@ -70,7 +74,7 @@ const CrearAlquiler = () => {
                 data.append(key, formData[key]);
             }
         });
-
+    
         try {
             await apiRequestWithTokenRefresh(async () => {
                 const token = localStorage.getItem('access_token');
@@ -81,14 +85,16 @@ const CrearAlquiler = () => {
                     }
                 });
             });
-            alert('Alquiler publicado con éxito');
-            navigate('/Alquileres');
+            setShowAlert(true); // Mostrar la alerta
+            setTimeout(() => {
+                setShowAlert(false); // Ocultar la alerta después de 3 segundos
+                navigate('/Alquileres'); // Navegar después de ocultar la alerta
+            }, 0);
         } catch (error) {
             console.error('Error al crear el alquiler:', error.response ? error.response.data : error);
         }
     };
 
-    
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -96,6 +102,11 @@ const CrearAlquiler = () => {
             transition={{ duration: 0.5 }}
             className="max-w-4xl mx-auto p-8 bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg shadow-xl"
         >
+            {showAlert && (
+                <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-green-500 text-white p-4 rounded-lg shadow-lg z-50">
+                    Alquiler publicado con éxito!
+                </div>
+            )}
             <h2 className="text-4xl font-bold mb-8 text-center text-gray-800 border-b-2 border-blue-500 pb-4">Crear Nuevo Alquiler</h2>
             <form onSubmit={handleSubmit} className="space-y-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

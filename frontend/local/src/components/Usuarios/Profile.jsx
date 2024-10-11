@@ -1,21 +1,15 @@
-// Profile.js
-
 import React, { useState, useEffect } from 'react';
-import { RiInstagramFill,RiFacebookCircleFill } from "react-icons/ri";
-import { useParams , useNavigate, Link} from 'react-router-dom';
+import { RiInstagramFill, RiFacebookCircleFill } from "react-icons/ri";
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import { jwtDecode } from 'jwt-decode';
+
 function Profile() {
     const { username } = useParams();
     const [profile, setProfile] = useState(null);
     const [alquileres, setAlquileres] = useState([]);
     const navigate = useNavigate();
     const token = localStorage.getItem('access_token');
-    let usuarioId = null;
-    if (token){
-        const decodificar = jwtDecode(token);
-        usuarioId = decodificar.user_id;
-    }
+
     useEffect(() => {
         if (!token) {
             console.error('No token found, please log in.');
@@ -34,115 +28,91 @@ function Profile() {
             .catch(error => {
                 console.error('Error fetching profile data:', error);
             });
+    }, [username, token]);
 
-    }, [username]);
-
-    useEffect(() =>{
-        const fechAlquierles = async () => {
+    useEffect(() => {
+        const fetchAlquileres = async () => {
             try {
                 const response = await axios.get('http://127.0.0.1:8000/alquiler/alquileres/view/', {
                     headers: {
-                        'Authorization':`Bearer ${token}`
+                        'Authorization': `Bearer ${token}`
                     }
                 });
                 setAlquileres(response.data);
-            } catch (error){
+            } catch (error) {
                 console.error('Error al obtener los alquileres: ', error);
             }
         };
-        fechAlquierles();
+        fetchAlquileres();
     }, [token]);
+
     const handleDetalle = (id) => {
         navigate(`/detalle-alquiler/${id}`);
     }
 
     if (!profile) {
-        return <div>Loading...</div>;
+        return <div className="flex justify-center items-center min-h-screen bg-gray-100">Loading...</div>;
     }
-    
-    return (
-        <div className="min-h-screen bg-gray-100 flex justify-center py-12">
-            <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-6xl">
 
-                <div className="flex items-center space-x-6">
-                    
+    return (
+        <div className="min-h-screen bg-gradient-to-r from-blue-100 via-white to-gray-200 flex justify-center py-12 px-4 lg:px-8">
+            <div className="bg-white shadow-2xl rounded-3xl p-10 w-full max-w-6xl   ">
+                <div className="relative flex items-center space-x-8">
                     <img
-                        className="w-24 h-24 rounded-full object-cover border-4 border-gray-300"
-                        src={profile.profile_picture} 
+                        className="w-36 h-36 rounded-full object-cover border-4 border-gray-300 shadow-lg transition-transform transform hover:scale-110"
+                        src={profile.profile_picture}
                         alt="Profile"
                     />
-
                     <div className="flex-grow">
-                        <div className="flex justify-between items-center">
-                            <h1 className="text-2xl font-bold text-gray-800">{profile.username}</h1>
-
+                        <h1 className="text-4xl font-bold text-gray-800 tracking-wider">{profile.username}</h1>
+                        <p className="text-lg text-gray-600 mt-2">@{profile.username}</p>
+                        <p className="text-gray-500 mt-1 text-sm">{profile.location}</p>
+                        <div className="mt-4 flex items-center space-x-4">
+                            <a href={profile.instagram} target='_blank' rel="noopener noreferrer" className="text-red-500 hover:text-red-600 transition duration-300">
+                                <RiInstagramFill className='text-4xl' />
+                            </a>
+                            <a href={profile.facebook} target='_blank' rel="noopener noreferrer" className="text-blue-500 hover:text-blue-600 transition duration-300">
+                                <RiFacebookCircleFill className='text-4xl' />
+                            </a>
                         </div>
-                        <p className="text-gray-600">@{profile.username}</p>
-                        <p className="text-gray-500 mt-1">{profile.location}</p>
                     </div>
                 </div>
 
-                {/* Estadísticas del perfil */}
-                <div className="mt-6 flex justify-between text-center">
-                    <div>
-                        <p className="text-lg font-bold text-gray-800">nada por ahora</p>
-                        <p className="text-gray-500">Posts</p>
-                    </div>
-                   
+                <div className="mt-8">
+                    <p className="text-gray-600 text-lg leading-relaxed">{profile.bio}</p>
                 </div>
 
-                <div className="mt-6">
-                    <p className="text-gray-600">
-                        {profile.bio}
-                    </p>
-                </div>
-
-                <div className='flex'>
-                    <div className="mt-6 text-red-500">
-                        <a href={profile.instagram} target='_blank'> <RiInstagramFill  className=' text-3xl' /></a>
-                    </div>
-                    
-                    <div className="text-blue-500 mt-6">
-                        <a href={profile.facebook}     target='_blank'>   <RiFacebookCircleFill className='text-3xl'  /> </a>
-                    </div>
-                </div>
-                <Link to='edit'>Editar Perfil </Link>
-
-                <div className="mt-6 flex justify-center">
-                    <button className="bg-blue-500 text-white py-2 px-6 rounded-full hover:bg-blue-600">
+                <div className="flex justify-between items-center mt-8">
+                    <Link to='edit' className="inline-block text-blue-600 font-semibold underline transition duration-300 hover:text-blue-800">Editar Perfil</Link>
+                    <button className="bg-gradient-to-r from-blue-500 to-blue-700 text-white py-2 px-6 rounded-full hover:shadow-xl transform transition-transform hover:-translate-y-1 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-800">
                         Enviar mensaje
                     </button>
                 </div>
 
-                <div className="mt-8">
-                    <h2 className="text-xl font-semibold text-gray-800">Posts</h2>
-                    {console.log(alquileres, "alquileres")}
-                    {console.log(profile.id , "id  del usuario")}
-                    {alquileres.map(alquileres => (
-                        
-                        profile.id === alquileres.user &&  (
-                       
-                        <div key={alquileres.id} className="grid grid-cols-3 gap-4 mt-4">
-                            
-                            {alquileres.imagenes && alquileres.imagenes.length > 0 ? (
-                                <img
-                                onClick={() => handleDetalle(alquileres.id)} 
-                                className="w-full h-32 object-cover rounded-lg"
-                                src={alquileres.imagenes[0].imagen}
-                                alt="Post 1"    
-                                />
-                            ):(
-                                <img
-                                className="w-full h-32 object-cover rounded-lg"
-                                src="https://www.dropbox.com/scl/fi/qp9v9jfykx02wla9l8jrf/35a4098a7a089a791cc381ee7bdd2dc2.jpg?rlkey=ff5y2muw14ra5rh57k4wcy50n&st=v1o9im3c&dl=1 "
-                                alt="Post 1"    
-                            />
-                            )}
-
-                        </div> 
-                        )
-                    ))}
-                    
+                <div className="mt-12">
+                    <h2 className="text-2xl font-bold text-gray-800 mb-4">Posts</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {alquileres.map(alquiler => (
+                            profile.id === alquiler.user && (
+                                <div key={alquiler.id} className="relative group rounded-lg overflow-hidden shadow-lg transform transition-transform hover:scale-105">
+                                    {alquiler.imagenes && alquiler.imagenes.length > 0 ? (
+                                        <img
+                                            onClick={() => handleDetalle(alquiler.id)}
+                                            className="w-full h-48 object-cover transition-opacity group-hover:opacity-80 cursor-pointer"
+                                            src={alquiler.imagenes[0].imagen}
+                                            alt="Post"
+                                        />
+                                    ) : (
+                                        <img
+                                            className="w-full h-48 object-cover"
+                                            src="https://www.dropbox.com/scl/fi/qp9v9jfykx02wla9l8jrf/35a4098a7a089a791cc381ee7bdd2dc2.jpg?rlkey=ff5y2muw14ra5rh57k4wcy50n&st=v1o9im3c&dl=1"
+                                            alt="Post"
+                                        />
+                                    )}
+                                </div>
+                            )
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>

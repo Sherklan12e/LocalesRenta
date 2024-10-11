@@ -6,6 +6,7 @@ import { FaUser, FaMapMarkerAlt, FaFacebook, FaInstagram } from 'react-icons/fa'
 import { MdDescription } from 'react-icons/md';
 
 function Profile() {
+    const [errors, setErrors] = useState({});
     const navigate = useNavigate();
     const token = localStorage.getItem('access_token');
     const { username } = useParams();
@@ -56,31 +57,54 @@ function Profile() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setErrors({});
         const formData = new FormData();
-        Object.keys(profileData).forEach(key => {
-            if (key === 'profile_picture' && profileData[key] instanceof File) {
-                formData.append(key, profileData[key]);
-            } else if (key !== 'profile_picture') {
+        for (const key in profileData) {
+            if (key === 'profile_picture') {
+                if (typeof profileData[key] === 'object') {
+                    formData.append(key, profileData[key]);
+                }
+                // Don't append if it's a URL (string)
+            } else {
                 formData.append(key, profileData[key]);
             }
-        });
-
+        }
+    
+        console.log('Data being sent to server:');
+        for (let [key, value] of formData.entries()) {
+            console.log(key, value);
+        }
+    
         try {
-            await axios.put(`http://127.0.0.1:8000/api/profile/${username}/update/`, formData, {
+            const response = await axios.put(`http://127.0.0.1:8000/api/profile/${username}/update/`, formData, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'multipart/form-data',
-                },
+                    'Content-Type': 'multipart/form-data'
+                }
             });
-            alert('¡Perfil actualizado con éxito!');
-            navigate(-1);
-            window.location.reload(true);
+            console.log('Profile updated:', response.data);
+            const newUsername = response.data.username;
+            if (newUsername !== username) {
+                localStorage.setItem('username', newUsername);
+                navigate(`/profile/${newUsername}`);
+            } else {
+                navigate(`/profile/${username}`);
+            }
         } catch (error) {
-            console.error('Error al actualizar el perfil:', error.response?.data);
-            alert('Error actualizando perfil: ' + (error.response?.data.detail || 'Error desconocido'));
+            console.error('Error updating profile:', error);
+            if (error.response) {
+                console.log('Error response:', error.response);
+                console.log('Error data:', error.response.data);
+                setErrors(error.response.data);
+            } else if (error.request) {
+                console.log('Error request:', error.request);
+                setErrors({ general: 'No response received from the server.' });
+            } else {
+                console.log('Error message:', error.message);
+                setErrors({ general: 'An error occurred while updating the profile.' });
+            }
         }
     };
-
     return (
         <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
@@ -100,6 +124,7 @@ function Profile() {
                     <div className="p-8 w-full">
                         <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold mb-1">Editar Perfil</div>
                         <form onSubmit={handleSubmit} className="space-y-4">
+                        {errors.general && <p className="text-red-500">{errors.general}</p>}
                             <motion.div whileHover={{ scale: 1.02 }} className="flex items-center space-x-2">
                                 <FaUser className="text-gray-400" />
                                 <input
@@ -176,9 +201,11 @@ function Profile() {
                             >
                                 Update Profile
                             </motion.button>
+                            {errors.username && <p className="text-red-500 text-sm mt-1">{errors.username}</p>}
                         </form>
                     </div>
                 </div>
+               
             </div>
         </div>
     );

@@ -81,19 +81,19 @@ const Navbar = () => {
                 </Link>
                 <ToastContainer position="top-center" autoClose={3000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
                 <div className="hidden md:flex items-center space-x-4 flex-grow justify-center">
-                    <Link to="/Alquileres" className="text-white hover:text-gray-200 transition duration-300">Locales</Link>
-                    <div className="relative flex items-center">
-                        <form onSubmit={handleSearch} className="flex items-center">
-                            <input
-                                type="text"
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                placeholder="Buscar..."
-                                className="px-4 py-2 rounded-l-full text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-300 w-64"
-                            />
-                            <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-r-full hover:bg-blue-600 transition duration-300">
-                                <AiOutlineSearch className="text-xl" />
-                            </button>
+                        <Link to="/Alquileres" className="text-white hover:text-gray-200 transition duration-300">Locales</Link>
+                        <div className="relative flex items-center w-full max-w-xl">
+                        <form onSubmit={handleSearch} className="flex items-center w-full">
+                        <input
+                            type="text"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            placeholder="Buscar..."
+                            className="w-full px-4 py-2 rounded-l-full text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-300 border-r-0"
+                        />
+                        <button type="submit" className="bg-blue-500 text-white px-6 py-2 rounded-r-full hover:bg-blue-600 transition duration-300 flex items-center">
+                            <AiOutlineSearch className="text-xl size-6" />
+                        </button>
                         </form>
                         <button 
                             onClick={() => setFilterMenuOpen(!isFilterMenuOpen)} 
@@ -107,43 +107,45 @@ const Navbar = () => {
                                     initial={{ opacity: 0, y: -10 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, y: -10 }}
-                                    className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-xl py-2 z-10 top-full"
+                                    className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-xl py-4 z-10 top-full"
                                 >
-                                    <input
-                                        type="number"
-                                        name="minPrice"
-                                        value={filterOptions.minPrice}
-                                        onChange={handleFilterChange}
-                                        placeholder="Precio mínimo"
-                                        className="block w-full px-4 py-2 text-gray-800 border-b border-gray-200"
-                                    />
-                                    <input
-                                        type="number"
-                                        name="maxPrice"
-                                        value={filterOptions.maxPrice}
-                                        onChange={handleFilterChange}
-                                        placeholder="Precio máximo"
-                                        className="block w-full px-4 py-2 text-gray-800 border-b border-gray-200"
-                                    />
-                                    <input
-                                        type="text"
-                                        name="location"
-                                        value={filterOptions.location}
-                                        onChange={handleFilterChange}
-                                        placeholder="Ubicación"
-                                        className="block w-full px-4 py-2 text-gray-800 border-b border-gray-200"
-                                    />
-                                    <select
-                                        name="propertyType"
-                                        value={filterOptions.propertyType}
-                                        onChange={handleFilterChange}
-                                        className="block w-full px-4 py-2 text-gray-800"
-                                    >
-                                        <option value="">Tipo de propiedad</option>
-                                        <option value="casa">Casa</option>
-                                        <option value="apartamento">Apartamento</option>
-                                        <option value="local">Local comercial</option>
-                                    </select>
+                                    <div className="px-4 space-y-3">
+                                        <input
+                                            type="number"
+                                            name="minPrice"
+                                            value={filterOptions.minPrice}
+                                            onChange={handleFilterChange}
+                                            placeholder="Precio mínimo"
+                                            className="w-full px-3 py-2 text-gray-800 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300"
+                                        />
+                                        <input
+                                            type="number"
+                                            name="maxPrice"
+                                            value={filterOptions.maxPrice}
+                                            onChange={handleFilterChange}
+                                            placeholder="Precio máximo"
+                                            className="w-full px-3 py-2 text-gray-800 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300"
+                                        />
+                                        <input
+                                            type="text"
+                                            name="location"
+                                            value={filterOptions.location}
+                                            onChange={handleFilterChange}
+                                            placeholder="Ubicación"
+                                            className="w-full px-3 py-2 text-gray-800 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300"
+                                        />
+                                        <select
+                                            name="propertyType"
+                                            value={filterOptions.propertyType}
+                                            onChange={handleFilterChange}
+                                            className="w-full px-3 py-2 text-gray-800 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300"
+                                        >
+                                            <option value="">Tipo de propiedad</option>
+                                            <option value="casa">Casa</option>
+                                            <option value="apartamento">Apartamento</option>
+                                            <option value="local">Local comercial</option>
+                                        </select>
+                                    </div>
                                 </motion.div>
                             )}
                         </AnimatePresence>
@@ -157,7 +159,7 @@ const Navbar = () => {
                                 whileHover={{ scale: 1.1 }}
                                 src={profile.profile_picture}
                                 alt="Profile"
-                                className="w-10 h-10 rounded-full cursor-pointer border-2 border-white"
+                                className="w-10 h-10 rounded-full cursor-pointer border-white"
                                 onClick={() => setProfileMenuOpen(!isProfileMenuOpen)}
                             />
                             <AnimatePresence>

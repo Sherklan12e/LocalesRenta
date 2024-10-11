@@ -10,6 +10,8 @@ class ImagenAlquilerSerializer(serializers.ModelSerializer):
 
 class AlquilerSerializer(serializers.ModelSerializer):
     country = CountryField()
+    username = serializers.CharField(source='user.username', read_only=True) 
+    user_profile_image = serializers.ImageField(source='user.profile.profile_picture', read_only=True )
     imagenes = ImagenAlquilerSerializer(many=True, read_only=True)
     eliminar_imagenes = serializers.ListField(
         child=serializers.IntegerField(), write_only=True, required=False
