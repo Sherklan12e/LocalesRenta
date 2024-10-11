@@ -1,5 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 import './css/index.css';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './components/Usuarios/Login';
 import Register from './components/Usuarios/Register';
