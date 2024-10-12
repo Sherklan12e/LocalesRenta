@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { FaUser, FaMapMarkerAlt, FaFacebook, FaInstagram } from 'react-icons/fa';
+import { FaUser, FaMapMarkerAlt, FaFacebook, FaInstagram, FaPhone } from 'react-icons/fa';
 import { MdDescription } from 'react-icons/md';
 
-function Profile() {
+function EditarProfile() {
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
+    const [showNotification, setShowNotification] = useState(false);
     const token = localStorage.getItem('access_token');
     const { username } = useParams();
     const [profileData, setProfileData] = useState({
@@ -17,6 +18,7 @@ function Profile() {
         location: '',
         facebook: '',
         instagram: '',
+        phone_number: '',
     });
     const [previewImage, setPreviewImage] = useState(null);
 
@@ -32,7 +34,6 @@ function Profile() {
             }
         })
             .then(response => {
-                console.log('Profile data from API:', response.data);
                 setProfileData(response.data);
                 setPreviewImage(response.data.profile_picture);
             })
@@ -69,12 +70,12 @@ function Profile() {
                 formData.append(key, profileData[key]);
             }
         }
-    
+
         console.log('Data being sent to server:');
         for (let [key, value] of formData.entries()) {
             console.log(key, value);
         }
-    
+
         try {
             const response = await axios.put(`http://127.0.0.1:8000/api/profile/${username}/update/`, formData, {
                 headers: {
@@ -82,14 +83,23 @@ function Profile() {
                     'Content-Type': 'multipart/form-data'
                 }
             });
+            setShowNotification(true);
+            setTimeout(() => {
+                setShowNotification(false);
+                window.location.reload(); 
+                navigate(`/profile/${username}`);
+            }, 500);
             console.log('Profile updated:', response.data);
             const newUsername = response.data.username;
             if (newUsername !== username) {
                 localStorage.setItem('username', newUsername);
                 navigate(`/profile/${newUsername}`);
+                window.location.reload(); 
             } else {
                 navigate(`/profile/${username}`);
+                window.location.reload(); 
             }
+            
         } catch (error) {
             console.error('Error updating profile:', error);
             if (error.response) {
@@ -105,110 +115,139 @@ function Profile() {
             }
         }
     };
+
     return (
-        <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
+        <div className="min-h-screen bg-gradient-to-br from-indigo-600 to-purple-500 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+            {showNotification && (
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5 }}
+                    className="fixed top-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-green-500 text-white p-6 rounded-xl shadow-xl z-50 text-center"
+                >
+                    <h3 className="text-lg font-bold tracking-wider">¡Perfil Actualizado Exitosamente!</h3>
+                </motion.div>
+            )}
+
+            <div className="max-w-lg w-full bg-white rounded-3xl shadow-lg overflow-hidden">
                 <div className="md:flex">
-                    <div className="md:flex-shrink-0">
+                    <div className="md:w-1/3 bg-gradient-to-br from-indigo-600 to-purple-500 p-6 flex flex-col items-center">
                         <motion.div
-                            whileHover={{ scale: 1.05 }}
-                            className="h-48 w-full object-cover md:w-48"
+                            whileHover={{ scale: 1.1 }}
+                            className="w-32 h-32 mb-4"
                         >
                             <img
-                                className="h-48 w-full object-cover md:w-48"
+                                className="w-full h-full rounded-full border-4 border-gray-100"
                                 src={previewImage || "https://via.placeholder.com/150"}
                                 alt="Profile"
                             />
                         </motion.div>
+                        <h2 className="text-white text-lg font-semibold">Actualizar Foto</h2>
                     </div>
-                    <div className="p-8 w-full">
-                        <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold mb-1">Editar Perfil</div>
+
+                    <div className="p-6 flex-grow">
+                        <h3 className="text-2xl font-semibold text-gray-700 text-center mb-6">Editar Perfil</h3>
                         <form onSubmit={handleSubmit} className="space-y-4">
-                        {errors.general && <p className="text-red-500">{errors.general}</p>}
-                            <motion.div whileHover={{ scale: 1.02 }} className="flex items-center space-x-2">
-                                <FaUser className="text-gray-400" />
+                            {errors.general && <p className="text-red-500 text-center">{errors.general}</p>}
+
+                            <motion.div whileHover={{ scale: 1.03 }} className="flex items-center space-x-2">
+                                <FaUser className="text-indigo-500" />
                                 <input
                                     type="text"
                                     name="username"
                                     value={profileData.username}
                                     onChange={handleChange}
                                     placeholder="Username"
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                    className={`w-full py-2 px-4 rounded-lg shadow-sm focus:ring-indigo-500 border ${errors.username ? 'border-red-500' : 'border-gray-300'}`}
                                 />
                             </motion.div>
-                            <motion.div whileHover={{ scale: 1.02 }} className="flex items-start space-x-2">
-                                <MdDescription className="text-gray-400 mt-3" />
+                            {errors.username && <p className="text-red-500 text-sm mt-1">{errors.username}</p>}
+
+                            <motion.div whileHover={{ scale: 1.03 }} className="flex items-start space-x-2">
+                                <MdDescription className="text-indigo-500 mt-3" />
                                 <textarea
                                     name="bio"
-                                    value={profileData.bio}
+                                    value={profileData.bio ?? ''}
                                     onChange={handleChange}
                                     placeholder="Bio"
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                    className={`w-full py-2 px-4 rounded-lg shadow-sm focus:ring-indigo-500 border ${errors.bio ? 'border-red-500' : 'border-gray-300'}`}
                                     rows="3"
                                 />
                             </motion.div>
-                            <motion.div whileHover={{ scale: 1.02 }} className="flex items-center space-x-2">
-                                <FaMapMarkerAlt className="text-gray-400" />
+                            {errors.bio && <p className="text-red-500 text-sm mt-1">{errors.bio}</p>}
+
+                            <motion.div whileHover={{ scale: 1.03 }} className="flex items-center space-x-2">
+                                <FaMapMarkerAlt className="text-indigo-500" />
                                 <input
                                     type="text"
                                     name="location"
                                     value={profileData.location}
                                     onChange={handleChange}
                                     placeholder="Location"
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                    className="w-full py-2 px-4 rounded-lg shadow-sm focus:ring-indigo-500 border-gray-300"
                                 />
                             </motion.div>
-                            <motion.div whileHover={{ scale: 1.02 }} className="flex items-center space-x-2">
-                                <FaFacebook className="text-gray-400" />
+
+                            <motion.div whileHover={{ scale: 1.03 }} className="flex items-center space-x-2">
+                                <FaPhone className="text-indigo-500" />
+                                <input
+                                    type="text"
+                                    name="phone_number"
+                                    value={profileData.phone_number}
+                                    onChange={handleChange}
+                                    placeholder="Número de Teléfono"
+                                    className="w-full py-2 px-4 rounded-lg shadow-sm focus:ring-indigo-500 border-gray-300"
+                                />
+                            </motion.div>
+
+                            <motion.div whileHover={{ scale: 1.03 }} className="flex items-center space-x-2">
+                                <FaFacebook className="text-indigo-500" />
                                 <input
                                     type="url"
                                     name="facebook"
                                     value={profileData.facebook}
                                     onChange={handleChange}
                                     placeholder="https://facebook.com/usuario"
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                    className="w-full py-2 px-4 rounded-lg shadow-sm focus:ring-indigo-500 border-gray-300"
                                 />
                             </motion.div>
-                            <motion.div whileHover={{ scale: 1.02 }} className="flex items-center space-x-2">
-                                <FaInstagram className="text-gray-400" />
+
+                            <motion.div whileHover={{ scale: 1.03 }} className="flex items-center space-x-2">
+                                <FaInstagram className="text-indigo-500" />
                                 <input
                                     type="url"
                                     name="instagram"
                                     value={profileData.instagram}
                                     onChange={handleChange}
                                     placeholder="https://instagram.com/usuario"
-                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                    className="w-full py-2 px-4 rounded-lg shadow-sm focus:ring-indigo-500 border-gray-300"
                                 />
                             </motion.div>
-                            <motion.div whileHover={{ scale: 1.02 }} className="flex items-center space-x-2">
+
+                            <motion.div whileHover={{ scale: 1.05 }} className="flex items-center space-x-2">
                                 <input
                                     type="file"
                                     name="profile_picture"
                                     onChange={handleImageChange}
-                                    className="mt-1 block w-full text-sm text-gray-500
-                                        file:mr-4 file:py-2 file:px-4
-                                        file:rounded-full file:border-0
-                                        file:text-sm file:font-semibold
-                                        file:bg-indigo-50 file:text-indigo-700
-                                        hover:file:bg-indigo-100"
+                                    className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-indigo-100 file:text-indigo-700 hover:file:bg-indigo-200"
                                 />
                             </motion.div>
+
                             <motion.button
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
+                                whileHover={{ scale: 1.1 }}
                                 type="submit"
-                                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                className="w-full text-center py-3 px-6 bg-indigo-600 text-white font-bold rounded-lg shadow-lg transition duration-300 hover:bg-indigo-700"
                             >
-                                Update Profile
+                                Guardar Cambios
                             </motion.button>
-                            {errors.username && <p className="text-red-500 text-sm mt-1">{errors.username}</p>}
                         </form>
                     </div>
                 </div>
-               
             </div>
         </div>
+
+
     );
 }
 
-export default Profile;
+export default EditarProfile;

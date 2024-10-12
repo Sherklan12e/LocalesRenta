@@ -9,7 +9,7 @@ function Profile() {
     const [alquileres, setAlquileres] = useState([]);
     const navigate = useNavigate();
     const token = localStorage.getItem('access_token');
-
+    const currentUser = localStorage.getItem('username');
     useEffect(() => {
         if (!token) {
             console.error('No token found, please log in.');
@@ -31,6 +31,7 @@ function Profile() {
     }, [username, token]);
 
     useEffect(() => {
+        if (!profile) return; 
         const fetchAlquileres = async () => {
             try {
                 const response = await axios.get('http://127.0.0.1:8000/alquiler/alquileres/view/', {
@@ -38,13 +39,16 @@ function Profile() {
                         'Authorization': `Bearer ${token}`
                     }
                 });
-                setAlquileres(response.data);
+                console.log('Alquileres obtenidos:', response.data); // Verifica los alquileres obtenidos
+                const userAlquileres = response.data.filter(alquiler => alquiler.user === profile.user);
+                console.log('Alquileres del usuario:', userAlquileres); // Verifica los alquileres filtrados
+                setAlquileres(userAlquileres);
             } catch (error) {
                 console.error('Error al obtener los alquileres: ', error);
             }
         };
         fetchAlquileres();
-    }, [token]);
+    }, [token, profile]);
 
     const handleDetalle = (id) => {
         navigate(`/detalle-alquiler/${id}`);
@@ -59,7 +63,7 @@ function Profile() {
             <div className="bg-white shadow-2xl rounded-3xl p-10 w-full max-w-6xl   ">
                 <div className="relative flex items-center space-x-8">
                     <img
-                        className="w-36 h-36 rounded-full object-cover border-4 border-gray-300 shadow-lg transition-transform transform hover:scale-110"
+                        className="w-36 h-36 rounded-full object-cover shadow-lg transition-transform transform hover:scale-110"
                         src={profile.profile_picture}
                         alt="Profile"
                     />
@@ -83,18 +87,26 @@ function Profile() {
                 </div>
 
                 <div className="flex justify-between items-center mt-8">
-                    <Link to='edit' className="inline-block text-blue-600 font-semibold underline transition duration-300 hover:text-blue-800">Editar Perfil</Link>
+                {currentUser === profile.username ? (
+                        <Link to='edit' className="inline-block text-blue-600 font-semibold underline transition duration-300 hover:text-blue-800">
+                            Editar Perfil
+                        </Link>
+                    ) : null}
+
                     <button className="bg-gradient-to-r from-blue-500 to-blue-700 text-white py-2 px-6 rounded-full hover:shadow-xl transform transition-transform hover:-translate-y-1 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-800">
                         Enviar mensaje
                     </button>
                 </div>
-
+                  
+                    
                 <div className="mt-12">
                     <h2 className="text-2xl font-bold text-gray-800 mb-4">Posts</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         {alquileres.map(alquiler => (
-                            profile.id === alquiler.user && (
+                            
+                            profile.user === alquiler.user && (
                                 <div key={alquiler.id} className="relative group rounded-lg overflow-hidden shadow-lg transform transition-transform hover:scale-105">
+                                    {console.log(alquileres,"alquiler")}
                                     {alquiler.imagenes && alquiler.imagenes.length > 0 ? (
                                         <img
                                             onClick={() => handleDetalle(alquiler.id)}

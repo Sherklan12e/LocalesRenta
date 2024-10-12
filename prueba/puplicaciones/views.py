@@ -77,11 +77,11 @@ class AlquilerRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 class AlquilerListView(generics.ListAPIView):
     queryset = Alquiler.objects.all().order_by('-fecha_publicacion')
     serializer_class = AlquilerSerializer
-    permission_classes = [AllowAny] 
+    permission_classes = [AllowAny]  
 
 class AlquilerSearchView(generics.ListAPIView):
     serializer_class = AlquilerSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny] 
     def get_queryset(self):
         queryset = Alquiler.objects.all()
         query = self.request.query_params.get('q', '')

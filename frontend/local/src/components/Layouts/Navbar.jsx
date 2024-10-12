@@ -159,7 +159,7 @@ const Navbar = () => {
                                 whileHover={{ scale: 1.1 }}
                                 src={profile.profile_picture}
                                 alt="Profile"
-                                className="w-10 h-10 rounded-full cursor-pointer border-white"
+                                className="object-cover w-10 h-10 rounded-full cursor-pointer border-white"
                                 onClick={() => setProfileMenuOpen(!isProfileMenuOpen)}
                             />
                             <AnimatePresence>

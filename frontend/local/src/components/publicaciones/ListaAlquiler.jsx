@@ -11,7 +11,7 @@ import 'react-lazy-load-image-component/src/effects/blur.css';
 const ListaAlquileres = () => {
     const [alquileres, setAlquileres] = useState([]);
     const [loading, setLoading] = useState(true);
-    
+
     const [hasMore, setHasMore] = useState(true);
     const [page, setPage] = useState(1); // Para paginación
     const [showModal, setShowModal] = useState(false);
@@ -36,10 +36,13 @@ const ListaAlquileres = () => {
                     }
                 });
                 setAlquileres(response.data);
+                 if (response.data.length < 9) {
+                    setHasMore(false);
+                }
             } catch (error) {
                 console.error('Error al obtener los alquileres:', error);
             } finally {
-                setLoading(false); 
+                setLoading(false);
             }
         };
 
@@ -76,6 +79,18 @@ const ListaAlquileres = () => {
         setShowModal(false);
         setSelectedAlquiler(null);
     };
+    const getCachedImage = (url) => {
+        const cachedImage = localStorage.getItem(url);
+        if (cachedImage) {
+            return cachedImage;
+        }
+        return null;
+    };
+
+    const handleImageLoad = (url) => {
+        localStorage.setItem(url, url);
+    };
+
     const SkeletonCard = () => {
         return (
             <div className="bg-white rounded-xl shadow-lg overflow-hidden animate-pulse">
@@ -98,69 +113,73 @@ const ListaAlquileres = () => {
             <div className="max-w-7xl mx-auto">
                 <h1 className="text-4xl font-bold text-gray-900 mb-10 text-center">Alquileres Disponibles</h1>
                 <InfiniteScroll
-                dataLength={alquileres.length}
-                next={() => setPage(prev => prev + 1)} // Incrementa la página
-                hasMore={hasMore}
-                loader={<SkeletonCard />}
-                endMessage={<p>No hay más alquileres para mostrar.</p>}
-            >
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {loading ? (
-                        // Mostrar skeletons mientras se cargan los datos
-                        Array.from({ length: 6 }).map((_, index) => (
-                            <SkeletonCard key={index} />
-                        ))
-                    ) : (
-                        alquileres.map(alquiler => (
-                            <motion.div
-                                key={alquiler.id}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.3 }}
-                                className="bg-white rounded-xl shadow-lg overflow-hidden transform transition duration-300 hover:scale-105"
-                            >
-                                <div className="relative">
-                                    <div className="aspect-w-16 aspect-h-9">
-                                        <LazyLoadImage
+                    dataLength={alquileres.length}
+                    next={() => setPage(prev => prev + 1)} // Incrementa la página
+                    hasMore={hasMore}
+                    loader={hasMore && loading ? <SkeletonCard /> : null} 
+                    endMessage={<p>No hay más alquileres para mostrar.</p>}
+                >
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                         {loading ? (
+                            Array.from({ length: 6 }).map((_, index) => (
+                                <SkeletonCard key={index} />
+                            ))
+                        ) : (
+                            alquileres.map(alquiler => {
+                                const cachedImage = getCachedImage(alquiler.imagenes[0]?.imagen);
+                                return (
+                                    <motion.div
+                                        key={alquiler.id}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ duration: 0.3 }}
+                                        className="bg-white rounded-xl shadow-lg overflow-hidden transform transition duration-300 hover:scale-105"
+                                    >
+                                    <div className="relative">
+                                        <div className="aspect-w-16 aspect-h-9">
+                                            <LazyLoadImage
+                                                onClick={() => handleDetalle(alquiler.id)}
+                                                className="w-full h-full object-cover cursor-pointer"
+                                                src={cachedImage || alquiler.imagenes[0]?.imagen}
+                                                alt={alquiler.titulo}
+                                                effect="blur"
+                                                placeholderSrc="https://via.placeholder.com/400x300?text=Loading..."
+                                                onLoad={() => handleImageLoad(alquiler.imagenes[0]?.imagen)}
+                                                loading="lazy" fetchpriority="high"
+                                            />
+                                        </div>
+                                        <button
+                                            onClick={() => openModal(alquiler)}
+                                            className="absolute top-2 right-2 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 transition duration-300"
+                                        >
+                                            <VscKebabVertical size={20} className="text-gray-600" />
+                                        </button>
+                                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
+                                            <h2 className="text-xl font-bold text-white">{alquiler.titulo}</h2>
+                                            <p className="text-sm text-gray-300 flex items-center mt-1">
+                                                <FaMapMarkerAlt className="mr-1" /> {alquiler.ubicacion}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="p-6">
+                                        <p className="text-2xl font-bold text-green-600 mb-4">${alquiler.precio}/mes</p>
+                                        <div className="flex justify-between text-sm text-gray-600 mb-4">
+                                            <span className="flex items-center"><FaBed className="mr-1" /> {alquiler.num_habitaciones} hab</span>
+                                            <span className="flex items-center"><FaBath className="mr-1" /> {alquiler.num_banos} baños</span>
+                                            <span className="flex items-center"><FaRuler className="mr-1" /> {alquiler.superficie} m²</span>
+                                        </div>
+                                        <button
                                             onClick={() => handleDetalle(alquiler.id)}
-                                            className="w-full h-full object-cover cursor-pointer"
-                                            src={alquiler.imagenes && alquiler.imagenes.length > 0 ? alquiler.imagenes[0].imagen : "https://www.dropbox.com/scl/fi/qp9v9jfykx02wla9l8jrf/35a4098a7a089a791cc381ee7bdd2dc2.jpg?rlkey=ff5y2muw14ra5rh57k4wcy50n&st=v1o9im3c&dl=1"}
-                                            alt={alquiler.titulo}
-                                            effect="blur"
-                                            placeholderSrc="https://via.placeholder.com/400x300?text=Loading..."
-                                        />
+                                            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300"
+                                        >
+                                            Ver detalles
+                                        </button>
                                     </div>
-                                    <button
-                                        onClick={() => openModal(alquiler)}
-                                        className="absolute top-2 right-2 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 transition duration-300"
-                                    >
-                                        <VscKebabVertical size={20} className="text-gray-600" />
-                                    </button>
-                                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
-                                        <h2 className="text-xl font-bold text-white">{alquiler.titulo}</h2>
-                                        <p className="text-sm text-gray-300 flex items-center mt-1">
-                                            <FaMapMarkerAlt className="mr-1" /> {alquiler.ubicacion}
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className="p-6">
-                                    <p className="text-2xl font-bold text-green-600 mb-4">${alquiler.precio}/mes</p>
-                                    <div className="flex justify-between text-sm text-gray-600 mb-4">
-                                        <span className="flex items-center"><FaBed className="mr-1" /> {alquiler.num_habitaciones} hab</span>
-                                        <span className="flex items-center"><FaBath className="mr-1" /> {alquiler.num_banos} baños</span>
-                                        <span className="flex items-center"><FaRuler className="mr-1" /> {alquiler.superficie} m²</span>
-                                    </div>
-                                    <button
-                                        onClick={() => handleDetalle(alquiler.id)}
-                                        className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300"
-                                    >
-                                        Ver detalles
-                                    </button>
-                                </div>
-                            </motion.div>
-                        ))
-                    )}
-                </div>
+                                    </motion.div>
+                                );
+                            })
+                        )}
+                    </div>
                 </InfiniteScroll>
             </div>
 
