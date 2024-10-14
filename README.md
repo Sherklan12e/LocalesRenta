@@ -1,6 +1,6 @@
 ## Sobre el projecto
 
-En Rent , nos enfocamos en conectar a las personas con los mejores lugares para alquilar en nuestra comunidad. Nuestro objetivo es facilitar la búsqueda y reserva de espacios para eventos, ventas y actividades especiales.
+Nos enfocamos en conectar a las personas con los mejores lugares para alquilar en nuestra comunidad. Nuestro objetivo es facilitar la búsqueda y reserva de espacios para eventos, ventas y actividades especiales.
 
 Nuestra plataforma ofrece una amplia variedad de opciones de alquiler, desde salones de eventos hasta casas históricas, pasando por garajes industriales y todo lo que te puedas imaginar. Nos aseguramos de que cada espacio sea único y tenga un ambiente acogedor para que nuestros clientes se sientan cómodos.
 
@@ -86,7 +86,7 @@ INTEGRANTES:
 - GIOVANNI
 - LUIS ARMOA
 - BRUNO CARLOS
-- JOEL TITO
+- JOEL TITO 
 
 
 
