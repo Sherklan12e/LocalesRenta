@@ -79,6 +79,7 @@ class RegisterView(generics.CreateAPIView):
     permission_classes = (AllowAny,)
     serializer_class = UserSerializer
     def perform_create(self, serializer):
+        print(self.request.data)
         user = serializer.save()
         self.send_welcome_email(user)
 
