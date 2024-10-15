@@ -5,7 +5,8 @@ from .serializers import UserSerializer, PostSerializer, ProfileSerializer
 from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
-
+from django.core.mail import send_mail
+from django.conf import settings
 from .models import Post,Profile
 
 from rest_framework import generics
@@ -77,6 +78,17 @@ class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = (AllowAny,)
     serializer_class = UserSerializer
+    def perform_create(self, serializer):
+        user = serializer.save()
+        self.send_welcome_email(user)
+
+    def send_welcome_email(self, user):
+        subject = 'Bienvenido a nuestra plataforma'
+        message = f'Hola {user.username},\n\nGracias por registrarte en nuestra plataforma. ¡Estamos felices de tenerte con nosotros!'
+        from_email = settings.EMAIL_HOST_USER
+        recipient_list = [user.email]
+
+        send_mail(subject, message, from_email, recipient_list)
 
 
 class PostCreateView(generics.ListCreateAPIView):

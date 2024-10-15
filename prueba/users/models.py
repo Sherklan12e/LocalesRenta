@@ -31,10 +31,10 @@ class Profile(models.Model):
 
         default_images = [
             'profile_perfil/default1.jpg',
-            'profile_perfil/default2.jpg',
-            'profile_perfil/default3.jpg',
-            'profile_perfil/default4.jpg',
-            'profile_perfil/default5.jpg',
+            # 'profile_perfil/default2.jpg',
+            # 'profile_perfil/default3.jpg',
+            # 'profile_perfil/default4.jpg',
+            # 'profile_perfil/default5.jpg',
         ]
 
         if not self.profile_picture or self.profile_picture.name == 'defaultProfile.jpg':
