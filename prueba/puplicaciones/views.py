@@ -12,7 +12,7 @@ from rest_framework import generics
 class ImagenAlquilerViewSet(viewsets.ModelViewSet):
     queryset = ImagenAlquiler.objects.all()
     serializer_class = ImagenAlquilerSerializer
-
+    permission_classes = [permissions.IsAuthenticated]
     @action(detail=True, methods=['post'])
     def delete_image(self, request, pk=None):
         try:
@@ -45,7 +45,7 @@ from rest_framework import status
 class AlquilerRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Alquiler.objects.all()
     serializer_class = AlquilerSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [AllowAny]
 
     def perform_update(self, serializer):
         alquiler = serializer.save()

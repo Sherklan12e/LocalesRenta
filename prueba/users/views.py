@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 from django.core.mail import send_mail
 from django.conf import settings
 from .models import Post,Profile
-
+from django.core.mail import EmailMultiAlternatives
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from .models import Profile
@@ -85,11 +85,45 @@ class RegisterView(generics.CreateAPIView):
 
     def send_welcome_email(self, user):
         subject = 'Bienvenido a nuestra plataforma'
-        message = f'Hola {user.username},\n\nGracias por registrarte en nuestra plataforma. ¡Estamos felices de tenerte con nosotros!'
         from_email = settings.EMAIL_HOST_USER
         recipient_list = [user.email]
+        
+        # Cuerpo del mensaje en texto plano (opcional)
+        text_content = f'Hola {user.username},\n\nGracias por registrarte en nuestra plataforma.'
 
-        send_mail(subject, message, from_email, recipient_list)
+        # Cuerpo del mensaje en HTML con una imagen
+        html_content = f"""
+         <html>
+            <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+                <table style="width: 100%; max-width: 600px; background-color: #ffffff; margin: 0 auto; border: 1px solid #ddd; padding: 20px;">
+                    <tr>
+                        <td style="text-align: center;">
+                            <h2 style="color: #333;">Hola {user.username},</h2>
+                            <p style="font-size: 16px; color: #555;  font-family: Afacad Flux, sans-serif;">
+                                Gracias por registrarte en nuestra plataforma. ¡Estamos felices de tenerte con nosotros! ❤️🙌 🐳
+                            </p>
+                            <img src="https://i.pinimg.com/736x/67/c4/97/67c497c204d30e7a4ec098159fc899d9.jpg" alt="Welcome Image" style="width: 100%; max-width: 300px; height: auto; margin-top: 20px;">
+                            <p style="font-size: 14px; color: #999; margin-top: 20px;">
+                                Si tienes alguna duda, no dudes en contactarnos.
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center; padding-top: 20px;">
+                            <a href="http://localhost:5173/" style="background-color: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-size: 16px;">
+                                Ir a la plataforma
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </body>
+        </html>
+        """
+
+        # Crear el correo con contenido alternativo (texto y HTML)
+        msg = EmailMultiAlternatives(subject, text_content, from_email, recipient_list)
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()
 
 
 class PostCreateView(generics.ListCreateAPIView):
