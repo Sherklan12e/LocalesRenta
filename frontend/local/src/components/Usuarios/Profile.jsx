@@ -93,9 +93,9 @@ function Profile() {
                         </Link>
                     ) : null}
 
-                    <button className="bg-gradient-to-r from-blue-500 to-blue-700 text-white py-2 px-6 rounded-full hover:shadow-xl transform transition-transform hover:-translate-y-1 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-800">
-                        Enviar mensaje
-                    </button>
+                        <Link to={`/chat/${profile.username}`} className="bg-gradient-to-r from-blue-500 to-blue-700 text-white py-2 px-6 rounded-full hover:shadow-xl transform transition-transform hover:-translate-y-1 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-800">
+                            Enviar mensaje
+                        </Link>
                 </div>
                   
                     

@@ -88,7 +88,7 @@ INTEGRANTES:
 - BRUNO CARLOS
 - JOEL TITO 
 
-
+run : daphne -v 2 core.asgi:application
 
 
 

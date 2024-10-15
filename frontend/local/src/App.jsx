@@ -19,7 +19,7 @@ const DetalleAlquiler = lazy(() => import('./components/publicaciones/DetallesAl
 const Profile = lazy(() => import('./components/Usuarios/Profile'));
 const EditProfile = lazy(() => import('./components/Usuarios/EditarProfile'));
 const SearchResults = lazy(() => import('./components/publicaciones/SearchResults'));
-
+const ChatInterface = lazy(() => import('./components/Chat/ChatInterface'));
 function App() {
   return (
     <Router>
@@ -37,6 +37,7 @@ function App() {
           <Route path="/profile/:username" element={<Profile />} />
           <Route path="/profile/:username/edit" element={<EditProfile />} />
           <Route path="/search" element={<SearchResults />} />
+          <Route path="/chat/:username" element={< ChatInterface />} />
         </Routes>
         <Footer />
       </Suspense>
