@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { RiInstagramFill, RiFacebookCircleFill } from "react-icons/ri";
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+import { useDarkMode } from '../../contexts/DarkModeContext';
 
 function Profile() {
     const { username } = useParams();
@@ -10,6 +11,7 @@ function Profile() {
     const navigate = useNavigate();
     const token = localStorage.getItem('access_token');
     const currentUser = localStorage.getItem('username');
+    const { darkMode } = useDarkMode();
     useEffect(() => {
         if (!token) {
             console.error('No token found, please log in.');
@@ -22,7 +24,6 @@ function Profile() {
             }
         })
             .then(response => {
-                console.log('Profile data from API:', response.data);
                 setProfile(response.data);
             })
             .catch(error => {
@@ -39,9 +40,8 @@ function Profile() {
                         'Authorization': `Bearer ${token}`
                     }
                 });
-                console.log('Alquileres obtenidos:', response.data); // Verifica los alquileres obtenidos
+                
                 const userAlquileres = response.data.filter(alquiler => alquiler.user === profile.user);
-                console.log('Alquileres del usuario:', userAlquileres); // Verifica los alquileres filtrados
                 setAlquileres(userAlquileres);
             } catch (error) {
                 console.error('Error al obtener los alquileres: ', error);
@@ -59,8 +59,8 @@ function Profile() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-r from-blue-100 via-white to-gray-200 flex justify-center py-12 px-4 lg:px-8">
-            <div className="bg-white shadow-2xl rounded-3xl p-10 w-full max-w-6xl   ">
+        <div className={`min-h-screen  ${darkMode ? 'bg-color_turquesa9 text-white ' : 'bg-white  text-black'}  flex justify-center py-12 px-4 lg:px-8`} >
+            <div className={`${darkMode ? 'bg-color_turquesa10 text-white ' : 'bg-white  text-black'} shadow-2xl rounded-3xl p-10 w-full max-w-6xl   `}>
                 <div className="relative flex items-center space-x-8">
                     <img
                         className="w-36 h-36 rounded-full object-cover shadow-lg transition-transform transform hover:scale-110"
@@ -68,9 +68,9 @@ function Profile() {
                         alt="Profile"
                     />
                     <div className="flex-grow">
-                        <h1 className="text-4xl font-bold text-gray-800 tracking-wider">{profile.username}</h1>
-                        <p className="text-lg text-gray-600 mt-2">@{profile.username}</p>
-                        <p className="text-gray-500 mt-1 text-sm">{profile.location}</p>
+                        <h1 className="text-4xl font-bold  tracking-wider">{profile.username}</h1>
+                        <p className="text-lg  mt-2">@{profile.username}</p>
+                        <p className=" mt-1 text-sm">{profile.location}</p>
                         <div className="mt-4 flex items-center space-x-4">
                             <a href={profile.instagram} target='_blank' rel="noopener noreferrer" className="text-red-500 hover:text-red-600 transition duration-300">
                                 <RiInstagramFill className='text-4xl' />
@@ -83,7 +83,7 @@ function Profile() {
                 </div>
 
                 <div className="mt-8">
-                    <p className="text-gray-600 text-lg leading-relaxed">{profile.bio}</p>
+                    <p className=" text-lg leading-relaxed">{profile.bio}</p>
                 </div>
 
                 <div className="flex justify-between items-center mt-8">
@@ -100,13 +100,12 @@ function Profile() {
                   
                     
                 <div className="mt-12">
-                    <h2 className="text-2xl font-bold text-gray-800 mb-4">Posts</h2>
+                    <h2 className="text-2xl font-bold mb-4">Posts</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         {alquileres.map(alquiler => (
                             
                             profile.user === alquiler.user && (
                                 <div key={alquiler.id} className="relative group rounded-lg overflow-hidden shadow-lg transform transition-transform hover:scale-105">
-                                    {console.log(alquileres,"alquiler")}
                                     {alquiler.imagenes && alquiler.imagenes.length > 0 ? (
                                         <img
                                             onClick={() => handleDetalle(alquiler.id)}

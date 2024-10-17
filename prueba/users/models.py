@@ -25,7 +25,7 @@ class Profile(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.bio:
-            self.bio = "Esta es una bio"
+            self.bio = "Mi bio"
         if not self.location:
             self.location = "Argentina"
 

@@ -4,6 +4,8 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LoadingSpinner from './components/publicaciones/LoadingSpinner';
+import { DarkModeProvider } from './contexts/DarkModeContext';
+
 
 // Importar componentes de forma diferida
 const Login = lazy(() => import('./components/Usuarios/Login'));
@@ -22,6 +24,7 @@ const SearchResults = lazy(() => import('./components/publicaciones/SearchResult
 const ChatInterface = lazy(() => import('./components/Chat/ChatInterface'));
 function App() {
   return (
+    <DarkModeProvider> 
     <Router>
       <Suspense fallback={<LoadingSpinner />}>
         <Navbar />
@@ -42,6 +45,7 @@ function App() {
         <Footer />
       </Suspense>
     </Router>
+    </DarkModeProvider>
   );
 }
 

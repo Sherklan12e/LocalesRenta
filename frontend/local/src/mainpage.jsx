@@ -5,8 +5,10 @@ import { FaSearch, FaBed, FaBath, FaRuler, FaMapMarkerAlt } from 'react-icons/fa
 import { motion } from 'framer-motion';
 import Slider from 'react-slick';
 import { Typewriter } from 'react-simple-typewriter';
+import { useDarkMode } from './contexts/DarkModeContext';
 
 const MainPage = () => {
+  const { darkMode } = useDarkMode();
   const [alquileres, setAlquileres] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
@@ -60,7 +62,7 @@ const MainPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className={`min-h-screen bg-gray-100 ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-800'}`}>
       {/* Hero section */}
       <motion.div
         initial={{ opacity: 0 }}
@@ -69,8 +71,8 @@ const MainPage = () => {
         className="relative bg-cover bg-center h-screen"
         style={{ backgroundImage: `url('https://i.pinimg.com/originals/28/eb/eb/28ebeb4cbc97ee8671d9fb275549fcf0.jpg')` }}
       >
-        <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
-          <div className="text-center">
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className={`text-center  ` }>
             <h1 className="text-5xl md:text-7xl text-white font-bold mb-6">
               Encuentra tu{' '}
               <span className="text-color_turquesa1">
@@ -111,7 +113,7 @@ const MainPage = () => {
         </div>
       </motion.div>
 
-      {/* Featured properties section */}
+
       <div className="max-w-7xl mx-auto mt-16 p-4">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
@@ -126,7 +128,7 @@ const MainPage = () => {
           {alquileres.map((alquiler) => (
             <motion.div
               key={alquiler.id}
-              className="mx-4 p-6 bg-white border rounded-lg shadow-lg"
+              className={`mx-4 p-2 border rounded-lg shadow-lg ${darkMode ? 'bg-gray-800 text-white' : 'bg-white'}`}
               whileHover={{ scale: 1.05 }}
             >
               <div className="relative">

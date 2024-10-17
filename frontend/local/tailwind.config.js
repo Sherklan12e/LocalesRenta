@@ -13,6 +13,9 @@ export default {
         color_turquesa5:'#a5ffff',
         color_turquesa6:'#0a6067',
         color_turquesa7:'#3f8c8c',
+        color_turquesa8:'#ffff00',
+        color_turquesa9:'#000000',
+        color_turquesa10:'#0c0c0c',
        
        }
     },
@@ -20,5 +23,6 @@ export default {
   plugins: [
     require('@tailwindcss/aspect-ratio'),
   ],
+  darkMode: 'class',
 }
 
