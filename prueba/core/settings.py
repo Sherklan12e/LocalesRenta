@@ -15,8 +15,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 DEBUG = os.getenv('DEBUG') == 'False'
 
-ALLOWED_HOSTS = ['*','.vercel.app']
-
+ALLOWED_HOSTS = ['*','.vercel.app','127.0.0.1','localhost']
 
 # Application definition
 
