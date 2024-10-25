@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
-import { FaBed, FaBath, FaCar, FaWifi, FaSwimmingPool, FaPaw, FaCouch, FaCalendarAlt, FaRuler, FaMapMarkerAlt, FaThermometerHalf, FaSnowflake, FaUser, FaEnvelope } from 'react-icons/fa';
+import { FaBed, FaBath, FaHome, FaCar, FaWifi, FaSwimmingPool, FaPaw, FaCouch, FaCalendarAlt, FaRuler, FaMapMarkerAlt, FaThermometerHalf, FaSnowflake, FaUser, FaEnvelope } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const DetalleAlquiler = () => {
@@ -107,6 +107,7 @@ const DetalleAlquiler = () => {
                             <p className="text-gray-600 text-lg">{alquiler.descripcion}</p>
                             <div className="space-y-2">
                                 <p className="text-gray-700 flex items-center"><FaMapMarkerAlt className="mr-2 text-blue-500" /> <span className="font-semibold">Ubicación:</span> {alquiler.ubicacion}</p>
+                                <p className="text-gray-700 flex items-center"> <FaHome className="mr-2 text-blue-500" />  <span className="font-semibold">Tipo :</span> {alquiler.tipo_propiedad}</p>
                                 <p className="text-gray-700 flex items-center"><FaRuler className="mr-2 text-blue-500" /> <span className="font-semibold">Superficie:</span> {alquiler.superficie} m²</p>
                                 <p className="text-gray-700 flex items-center"><FaCalendarAlt className="mr-2 text-blue-500" /> <span className="font-semibold">Publicado el:</span> {new Date(alquiler.fecha_publicacion).toLocaleDateString()}</p>
                             </div>
@@ -121,6 +122,7 @@ const DetalleAlquiler = () => {
                                 {alquiler.mascotas_permitidas && <Feature icon={<FaPaw />} text="Mascotas permitidas" />}
                                 {alquiler.calefaccion && <Feature icon={<FaThermometerHalf />} text="Calefacción" />}
                                 {alquiler.aire_acondicionado && <Feature icon={<FaSnowflake />} text="Aire acondicionado" />}
+                                {alquiler.tipo_propiedad && <Feature icon={<FaSnowflake />} text="Aire acondicionado" />}
                             </div>
                         </motion.div>
                     </div>

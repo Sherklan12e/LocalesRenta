@@ -45,11 +45,11 @@ const Navbar = () => {
     const handleSearch = (e) => {
         e.preventDefault();
         const queryParams = new URLSearchParams({
-            q: searchQuery,
-            min_price: filterOptions.minPrice,
-            max_price: filterOptions.maxPrice,
+            query: searchQuery, // Changed from 'q' to 'query'
+            minPrice: filterOptions.minPrice, // Changed from 'min_price' to 'minPrice'
+            maxPrice: filterOptions.maxPrice, // Changed from 'max_price' to 'maxPrice'
             location: filterOptions.location,
-            property_type: filterOptions.propertyType
+            propertyType: filterOptions.propertyType
         }).toString();
         navigate(`/search?${queryParams}`);
     };
@@ -85,7 +85,7 @@ const Navbar = () => {
                 </Link>
                 <ToastContainer position="top-center" autoClose={3000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
                 <div className="hidden md:flex items-center space-x-4 flex-grow justify-center">
-                    <Link to="/Alquileres" className="text-white hover:text-gray-200 transition duration-300">Locales</Link>
+                    <Link to="/Alquileres" className=" hover:text-gray-200 transition duration-300">Locales</Link>
                     <div className="relative flex items-center w-full max-w-xl">
                         <form onSubmit={handleSearch} className="flex items-center w-full">
                             <input
@@ -130,14 +130,14 @@ const Navbar = () => {
                                             placeholder="Precio máximo"
                                             className="w-full px-3 py-2  border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300"
                                         />
-                                        <input
+                                        {/* <input
                                             type="text"
                                             name="location"
                                             value={filterOptions.location}
                                             onChange={handleFilterChange}
                                             placeholder="Ubicación"
                                             className="w-full px-3 py-2 text-gray-800 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300"
-                                        />
+                                        /> */}
                                         <select
                                             name="propertyType"
                                             value={filterOptions.propertyType}
@@ -145,8 +145,8 @@ const Navbar = () => {
                                             className="w-full px-3 py-2 t border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300"
                                         >
                                             <option value="">Tipo de propiedad</option>
-                                            <option value="casa">Casa</option>
-                                            <option value="apartamento">Apartamento</option>
+                                            <option value="casa">casa</option>
+                                            <option value="departamento">departamento</option>
                                             <option value="local">Local comercial</option>
                                         </select>
                                     </div>
@@ -209,7 +209,7 @@ const Navbar = () => {
                 </div>
 
                 <div className="md:hidden">
-                    <button onClick={() => setIsOpen(!isOpen)} className="text-white focus:outline-none">
+                    <button onClick={() => setIsOpen(!isOpen)} className=" focus:outline-none">
                         {isOpen ? <AiOutlineClose size={24} /> : <AiOutlineMenu size={24} />}
                     </button>
                 </div>
@@ -221,9 +221,9 @@ const Navbar = () => {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="md:hidden bg-blue-600 mt-2 rounded-lg shadow-lg"
+                        className="md:hidden mt-2 rounded-lg shadow-lg"
                     >
-                        <Link to="/Alquileres" className="block py-2 px-4 hover:bg-color_turquesa8">Locales</Link>
+                        <Link to="/Alquileres" className={`block  ${darkMode ? ' text-black ' : '  text-black'} py-2 px-4 `}>Locales</Link>
                         <form onSubmit={handleSearch} className="px-4 py-2">
                             <input
                                 type="text"
