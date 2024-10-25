@@ -10,10 +10,10 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = '123df'
 
 
-DEBUG = os.getenv('DEBUG') == 'False'
+DEBUG = True
 
 ALLOWED_HOSTS = ['*','.vercel.app','127.0.0.1','localhost']
 
@@ -126,7 +126,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'etproyecto1@gmail.com'
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_PASSWORD = 'pstnxhpckxtklgfc'
 
 
 LANGUAGE_CODE = 'en-us'
