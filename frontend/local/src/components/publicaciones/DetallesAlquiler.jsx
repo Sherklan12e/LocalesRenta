@@ -15,7 +15,7 @@ const DetalleAlquiler = () => {
     useEffect(() => {
         const fetchAlquiler = async () => {
             try {
-                const response = await axios.get(`http://127.0.0.1:8000/alquiler/alquileres/${id}/`, {
+                const response = await axios.get(`https://sherklan.pythonanywhere.com/alquiler/alquileres/${id}/`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 setAlquiler(response.data);
@@ -29,7 +29,7 @@ const DetalleAlquiler = () => {
 
         const fetchRandomAlquileres = async () => {
             try {
-                const response = await axios.get('http://127.0.0.1:8000/alquiler/alquileres/random/', {
+                const response = await axios.get('https://sherklan.pythonanywhere.com/alquiler/alquileres/random/', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 setRandomAlquileres(response.data);

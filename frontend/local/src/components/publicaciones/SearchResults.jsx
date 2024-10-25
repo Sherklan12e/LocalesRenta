@@ -15,7 +15,7 @@ const SearchResults = () => {
         const fetchResults = async () => {
             try {
                 const token = localStorage.getItem('access_token');
-                let url = `http://127.0.0.1:8000/alquiler/search/?q=${query || ''}`;
+                let url = `https://sherklan.pythonanywhere.com/alquiler/search/?q=${query || ''}`;
                 if (minPrice) url += `&min_price=${minPrice}`;
                 if (maxPrice) url += `&max_price=${maxPrice}`;
                 if (locationFilter) url += `&location=${locationFilter}`;

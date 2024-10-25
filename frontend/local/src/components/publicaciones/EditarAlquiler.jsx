@@ -35,7 +35,7 @@ const EditarAlquiler = () => {
     useEffect(() => {
         const fetchAlquiler = async () => {
             try {
-                const response = await axios.get(`http://127.0.0.1:8000/alquiler/alquileres/${id}/`, {
+                const response = await axios.get(`https://sherklan.pythonanywhere.com/alquiler/alquileres/${id}/`, {
                     headers: {
                         'Authorization': `Bearer ${token}` // Agrega el token JWT a la cabecera
                     }
@@ -130,7 +130,7 @@ const EditarAlquiler = () => {
         console.log([...data.entries()]);  
     
         try {
-            await axios.put(`http://127.0.0.1:8000/alquiler/alquileres/${id}/`, data, {
+            await axios.put(`https://sherklan.pythonanywhere.com/alquiler/alquileres/${id}/`, data, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data',

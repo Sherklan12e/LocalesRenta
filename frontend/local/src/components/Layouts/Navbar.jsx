@@ -34,7 +34,7 @@ const Navbar = () => {
     }, [location]);
     useEffect(() => {
         if (token) {
-            axios.get(`http://127.0.0.1:8000/api/profile/${username}/`, {
+            axios.get(`https://sherklan.pythonanywhere.com/api/profile/${username}/`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             })
                 .then(response => setProfile(response.data))
