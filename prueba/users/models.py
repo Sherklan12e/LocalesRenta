@@ -19,6 +19,7 @@ class Profile(models.Model):
     location = models.CharField(max_length=100, blank=True, null=True)
     facebook = models.CharField(max_length=100, blank=True, null=True)
     instagram = models.CharField(max_length=100, blank=True, null=True)
+    whatsapp = models.CharField(max_length=20, blank=True, null=True)  # New field for WhatsApp number
 
     def __str__(self):
         return self.user.username

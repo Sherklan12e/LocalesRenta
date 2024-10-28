@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { RiInstagramFill, RiFacebookCircleFill } from "react-icons/ri";
+import { RiInstagramFill, RiFacebookCircleFill, RiWhatsappFill } from "react-icons/ri";
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { useDarkMode } from '../../contexts/DarkModeContext';
@@ -76,23 +76,21 @@ function Profile() {
                         <p className="text-lg  mt-2">@{profile.username}</p>
                         <p className=" mt-1 text-sm">{profile.location}</p>
                         <div className="mt-4 flex items-center space-x-4">
-                            {
-                                profile.instagram ?
-                                    <a href={profile.instagram} className="text-red-500 hover:text-red-600 transition duration-300">
-                                        <RiInstagramFill className='text-4xl' />
-                                    </a>
-                                    : null
-                            }
-
-
-                            {
-                                profile.facebook ?
-                                    <a href={profile.facebook} target='_blank' rel="noopener noreferrer" className="text-blue-500 hover:text-blue-600 transition duration-300">
-                                        <RiFacebookCircleFill className='text-4xl' />
-                                    </a>
-                                    : null
-                            }
-
+                            {profile.instagram && (
+                                <a href={profile.instagram} className="text-red-500 hover:text-red-600 transition duration-300">
+                                    <RiInstagramFill className='text-4xl' />
+                                </a>
+                            )}
+                            {profile.facebook && (
+                                <a href={profile.facebook} target='_blank' rel="noopener noreferrer" className="text-blue-500 hover:text-blue-600 transition duration-300">
+                                    <RiFacebookCircleFill className='text-4xl' />
+                                </a>
+                            )}
+                            {profile.whatsapp && (
+                                <a href={`https://wa.me/${profile.whatsapp}?text=Hola%20Me%20Interesado%20en%20tu%20Local%20que%20publicaste%20en%20HANKROK%20`} target='_blank' rel="noopener noreferrer" className="text-green-500 hover:text-green-600 transition duration-300">
+                                    <RiWhatsappFill className='text-4xl' />
+                                </a>
+                            )}
                         </div>
                     </div>
                 </div>

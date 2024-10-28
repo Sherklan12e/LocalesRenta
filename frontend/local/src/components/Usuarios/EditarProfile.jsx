@@ -5,6 +5,7 @@ import { motion ,AnimatePresence } from 'framer-motion';
 import { FaUser, FaMapMarkerAlt, FaFacebook, FaInstagram, FaPhone } from 'react-icons/fa';
 import { MdDescription } from 'react-icons/md';
 import { useDarkMode } from "../../contexts/DarkModeContext";
+import { RiWhatsappFill } from "react-icons/ri";
 
 function EditarProfile() {
     const { darkMode } = useDarkMode();
@@ -21,7 +22,7 @@ function EditarProfile() {
         location: '',
         facebook: '',
         instagram: '',
-        phone_number: '',
+        whatsapp: '',
     });
     const [previewImage, setPreviewImage] = useState(null);
 
@@ -194,18 +195,7 @@ function EditarProfile() {
                                 />
                             </motion.div>
 
-                            <motion.div whileHover={{ scale: 1.03 }} className="flex items-center space-x-2">
-                                <FaPhone className="text-green-500" />
-                                <input
-                                    type="text"
-                                    name="phone_number"
-                                    value={profileData.phone_number}
-                                    onChange={handleChange}
-                                    placeholder="Número de Teléfono"
-                                    className={`${darkMode ? 'bg-slate-900 text-white ' : 'bg-white text-black'}  w-full py-2 px-4 rounded-lg shadow-sm focus:ring-indigo-500 `}
-                                />
-                            </motion.div>
-
+                            
                             <motion.div whileHover={{ scale: 1.03 }} className="flex items-center space-x-2">
                                 <FaFacebook className="text-blue-400" />
                                 <input
@@ -227,6 +217,18 @@ function EditarProfile() {
                                     onChange={handleChange}
                                     placeholder="https://instagram.com/usuario"
                                     className={`w-full py-2 ${darkMode ? 'bg-slate-900 text-white ' : 'bg-white text-black'} px-4 rounded-lg shadow-sm focus:ring-indigo-500 border-gray-300`}
+                                />
+                            </motion.div>
+
+                            <motion.div whileHover={{ scale: 1.03 }} className="flex items-center space-x-2">
+                                <RiWhatsappFill className="text-green-500" />
+                                <input
+                                    type="text"
+                                    name="whatsapp"
+                                    value={profileData.whatsapp}
+                                    onChange={handleChange}
+                                    placeholder="WhatsApp number"
+                                    className={`w-full py-2 px-4 ${darkMode ? 'bg-slate-900 text-white ' : 'bg-white text-black'}  rounded-lg shadow-sm focus:ring-indigo-500 border-gray-300`}
                                 />
                             </motion.div>
 
