@@ -32,7 +32,7 @@ function EditarProfile() {
             return;
         }
 
-        axios.get(`http://127.0.0.1:8000/api/profile/${username}/`, {
+        axios.get(`https://sherklan.pythonanywhere.com/api/profile/${username}/`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -81,7 +81,7 @@ function EditarProfile() {
         }
 
         try {
-            const response = await axios.put(`http://127.0.0.1:8000/api/profile/${username}/update/`, formData, {
+            const response = await axios.put(`https://sherklan.pythonanywhere.com/api/profile/${username}/update/`, formData, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data'

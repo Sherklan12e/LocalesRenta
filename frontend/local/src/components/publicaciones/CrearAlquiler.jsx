@@ -81,7 +81,7 @@ const CrearAlquiler = () => {
         try {
             await apiRequestWithTokenRefresh(async () => {
                 const token = localStorage.getItem('access_token');
-                return axios.post('http://localhost:8000/alquiler/alquileres/', data, {
+                return axios.post('https://sherklan.pythonanywhere.com/alquiler/alquileres/', data, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         Authorization: `Bearer ${token}`,

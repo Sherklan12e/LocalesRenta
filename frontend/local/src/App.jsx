@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy ,useEffect} from 'react';
 import './css/index.css';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -22,6 +22,8 @@ const Profile = lazy(() => import('./components/Usuarios/Profile'));
 const EditProfile = lazy(() => import('./components/Usuarios/EditarProfile'));
 const SearchResults = lazy(() => import('./components/publicaciones/SearchResults'));
 const ChatInterface = lazy(() => import('./components/Chat/ChatInterface'));
+
+
 function App() {
   return (
     <DarkModeProvider> 

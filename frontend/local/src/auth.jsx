@@ -4,7 +4,7 @@ import axios from 'axios';
 export const refreshAccessToken = async () => {
     try {
         const refreshToken = localStorage.getItem('refresh_token');
-        const response = await axios.post('http://localhost:8000/api/token/refresh/', {
+        const response = await axios.post('https://sherklan.pythonanywhere.com/api/token/refresh/', {
             refresh: refreshToken,
         });
         localStorage.setItem('access_token', response.data.access);

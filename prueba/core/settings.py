@@ -15,8 +15,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 DEBUG = os.getenv('DEBUG') == 'False'
 
-ALLOWED_HOSTS = ['*']
-
+ALLOWED_HOSTS = ['*','.vercel.app','127.0.0.1','localhost']
 
 # Application definition
 
@@ -57,10 +56,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:5173',
+    'https://renta1.netlify.app',
 ]
 CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:5173',
+    'https://renta1.netlify.app',
     'http://127.0.0.1:8000',
     'http://localhost:8000',
 ]

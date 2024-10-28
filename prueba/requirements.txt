@@ -1,5 +1,6 @@
 asgiref
 certifi
+channels
 charset-normalizer
 Django
 django-cors-headers
@@ -9,6 +10,7 @@ djangorestframework-jwt
 djangorestframework-simplejwt
 dropbox
 idna
+mysqlclient
 pillow
 ply
 PyJWT

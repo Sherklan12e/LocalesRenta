@@ -20,7 +20,7 @@ function Profile() {
             return;
         }
 
-        axios.get(`http://127.0.0.1:8000/api/profile/${username}/`, {
+        axios.get(`https://sherklan.pythonanywhere.com/api/profile/${username}/`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -37,7 +37,7 @@ function Profile() {
         if (!profile) return;
         const fetchAlquileres = async () => {
             try {
-                const response = await axios.get('http://127.0.0.1:8000/alquiler/alquileres/view/', {
+                const response = await axios.get('https://sherklan.pythonanywhere.com/alquiler/alquileres/view/', {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
