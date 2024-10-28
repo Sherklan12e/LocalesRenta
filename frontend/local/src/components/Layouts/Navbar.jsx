@@ -34,7 +34,7 @@ const Navbar = () => {
     }, [location]);
     useEffect(() => {
         if (token) {
-            axios.get(`https://sherklan.pythonanywhere.com/api/profile/${username}/`, {
+            axios.get(`http://127.0.0.1:8000/api/profile/${username}/`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             })
                 .then(response => setProfile(response.data))
@@ -111,7 +111,7 @@ const Navbar = () => {
                                     initial={{ opacity: 0, y: -10 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, y: -10 }}
-                                    className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-xl py-4 z-10 top-full"
+                                    className={`absolute right-0 mt-2 w-64 ${darkMode ? 'bg-black text-white ' : 'bg-white  text-black'}  rounded-lg shadow-xl py-4 z-10 top-full`}
                                 >
                                     <div className="px-4 space-y-3">
                                         <input
@@ -120,7 +120,11 @@ const Navbar = () => {
                                             value={filterOptions.minPrice}
                                             onChange={handleFilterChange}
                                             placeholder="Precio mínimo"
-                                            className="w-full px-3 py-2  border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300"
+                                            step="1" 
+                                            min="1"
+                                            aria-label="Amount" 
+                                            pattern="[0-9]*"
+                                            className={`  w-full px-3 py-2  ${darkMode ? 'bg-gray-800 text-white ' : 'bg-white  text-black'}   border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300`}
                                         />
                                         <input
                                             type="number"
@@ -128,7 +132,7 @@ const Navbar = () => {
                                             value={filterOptions.maxPrice}
                                             onChange={handleFilterChange}
                                             placeholder="Precio máximo"
-                                            className="w-full px-3 py-2  border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300"
+                                            className={`w-full px-3 py-2   ${darkMode ? 'bg-gray-800 text-white ' : 'bg-white  text-black'}   border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300`}
                                         />
                                         {/* <input
                                             type="text"
@@ -142,7 +146,7 @@ const Navbar = () => {
                                             name="propertyType"
                                             value={filterOptions.propertyType}
                                             onChange={handleFilterChange}
-                                            className="w-full px-3 py-2 t border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300"
+                                            className={`w-full px-3 py-2 t  ${darkMode ? 'bg-gray-800 text-white ' : 'bg-white  text-black'}   border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300`}
                                         >
                                             <option value="">Tipo de propiedad</option>
                                             <option value="casa">casa</option>

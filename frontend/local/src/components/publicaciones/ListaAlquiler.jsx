@@ -30,7 +30,7 @@ const ListaAlquileres = () => {
         setLoading(true);
         const fetchAlquileres = async () => {
             try {
-                const response = await axios.get('https://sherklan.pythonanywhere.com/alquiler/alquileres/view/', {
+                const response = await axios.get('http://127.0.0.1:8000/alquiler/alquileres/view/', {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -51,7 +51,7 @@ const ListaAlquileres = () => {
 
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`https://sherklan.pythonanywhere.com/alquiler/alquileres/${id}/`, {
+            await axios.delete(`http://127.0.0.1:8000/alquiler/alquileres/${id}/`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

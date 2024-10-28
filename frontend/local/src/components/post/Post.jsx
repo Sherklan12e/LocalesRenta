@@ -9,7 +9,7 @@ const PostPage = () => {
         const fetchPosts = async () => {
             try {
                 const token = localStorage.getItem('access_token');
-                const response = await axios.get('https://sherklan.pythonanywhere.com/api/posts/', {
+                const response = await axios.get('http://127.0.0.1:8000/api/posts/', {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -30,7 +30,7 @@ const PostPage = () => {
 
     const refreshAccessToken = async () => {
         try {
-            const response = await axios.post('https://sherklan.pythonanywhere.com/api/token/refresh/', {
+            const response = await axios.post('http://127.0.0.1:8000/api/token/refresh/', {
                 refresh: localStorage.getItem('refresh_token'),
             });
             localStorage.setItem('access_token', response.data.access);
@@ -48,13 +48,13 @@ const PostPage = () => {
         try {
             const token = await refreshAccessToken(); // Refrescar el token de acceso
 
-            await axios.post('https://sherklan.pythonanywhere.com/api/posts/', { content }, {
+            await axios.post('http://127.0.0.1:8000/api/posts/', { content }, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             });
             setContent('');
-            const response = await axios.get('https://sherklan.pythonanywhere.com/api/posts/', {
+            const response = await axios.get('http://127.0.0.1:8000/api/posts/', {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -69,7 +69,7 @@ const PostPage = () => {
         try {
             const token = await refreshAccessToken(); // Refrescar el token de acceso
 
-            await axios.delete(`https://sherklan.pythonanywhere.com/api/posts/${postId}/`, {
+            await axios.delete(`http://127.0.0.1:8000/api/posts/${postId}/`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

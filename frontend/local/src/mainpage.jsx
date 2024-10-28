@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import Slider from 'react-slick';
 import { Typewriter } from 'react-simple-typewriter';
 import { useDarkMode } from './contexts/DarkModeContext';
-
+import ImageS from './assets/images/pexels-binyaminmellish-106399.jpg'
 const MainPage = () => {
   const { darkMode } = useDarkMode();
   const [alquileres, setAlquileres] = useState([]);
@@ -16,7 +16,7 @@ const MainPage = () => {
   useEffect(() => {
     const fetchAlquileres = async () => {
       try {
-        const response = await axios.get('https://sherklan.pythonanywhere.com/alquiler/alquileres/view/');
+        const response = await axios.get('http://127.0.0.1:8000/alquiler/alquileres/view/');
         setAlquileres(response.data);
       } catch (error) {
         console.error('Error fetching alquileres:', error);
@@ -69,7 +69,7 @@ const MainPage = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
         className="relative bg-cover bg-center h-screen"
-        style={{ backgroundImage: `url('https://i.pinimg.com/originals/28/eb/eb/28ebeb4cbc97ee8671d9fb275549fcf0.jpg')` }}
+        style={{ backgroundImage: `url('${ImageS}')` }}
       >
         <div className="absolute inset-0 flex items-center justify-center">
           <div className={`text-center  ` }>
@@ -97,7 +97,7 @@ const MainPage = () => {
               <input
                 type="text"
                 placeholder="Buscar por ubicación, tipo de propiedad..."
-                className="w-full md:w-96 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-color_turquesa1 shadow-md"
+                className={ `w-full md:w-96 p-4 ${darkMode ? 'bg-color_turquesa9 text-white ' : 'bg-white  text-black'} rounded-lg focus:outline-none focus:ring-2 focus:ring-color_turquesa1 shadow-md`}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />

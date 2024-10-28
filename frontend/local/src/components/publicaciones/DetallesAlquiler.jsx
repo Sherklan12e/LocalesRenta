@@ -3,54 +3,87 @@ import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
 import { FaBed, FaBath, FaHome, FaCar, FaWifi, FaSwimmingPool, FaPaw, FaCouch, FaCalendarAlt, FaRuler, FaMapMarkerAlt, FaThermometerHalf, FaSnowflake, FaUser, FaEnvelope } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
+import Profile from '../Usuarios/Profile';
 
 const DetalleAlquiler = () => {
     const [alquiler, setAlquiler] = useState(null);
     const [activeImage, setActiveImage] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [randomAlquileres, setRandomAlquileres] = useState([]);
+    const [profile, setPerfil] = useState(null);
     const { id } = useParams();
     const token = localStorage.getItem('access_token');
 
-    useEffect(() => {
-        const fetchAlquiler = async () => {
-            try {
-                const response = await axios.get(`https://sherklan.pythonanywhere.com/alquiler/alquileres/${id}/`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                setAlquiler(response.data);
-                if (response.data.imagenes && response.data.imagenes.length > 0) {
-                    setActiveImage(response.data.imagenes[0].imagen);
-                }
-            } catch (error) {
-                console.error('Error al obtener el detalle del alquiler:', error);
+   useEffect(() => {
+    const fetchAlquiler = async () => {
+        try {
+            const response = await axios.get(`http://127.0.0.1:8000/alquiler/alquileres/${id}/`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            setAlquiler(response.data);
+            if (response.data.imagenes && response.data.imagenes.length > 0) {
+                setActiveImage(response.data.imagenes[0].imagen);
             }
-        };
-
-        const fetchRandomAlquileres = async () => {
-            try {
-                const response = await axios.get('https://sherklan.pythonanywhere.com/alquiler/alquileres/random/', {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                setRandomAlquileres(response.data);
-            } catch (error) {
-                console.error('Error al obtener alquileres aleatorios:', error);
+            // Call SitieneWasap after fetching alquiler
+            if (response.data.username) {
+                await SitieneWasap(response.data.username);
             }
-        };
+        } catch (error) {
+            console.error('Error al obtener el detalle del alquiler:', error);
+        }
+    };
 
-        fetchAlquiler();
-        fetchRandomAlquileres();
-    }, [id, token]);
+    const fetchRandomAlquileres = async () => {
+        try {
+            const response = await axios.get('http://127.0.0.1:8000/alquiler/alquileres/', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            setRandomAlquileres(response.data);
+        } catch (error) {
+            console.error('Error al obtener alquileres aleatorios:', error);
+        }
+    };
 
+    const SitieneWasap = async (username) => {
+        try {
+            const response = await axios.get(`http://127.0.0.1:8000/api/profile/${username}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            setPerfil(response.data);
+        } catch (error) {
+            console.error('Error al obtener perfil:', error);
+        }
+    };
+
+    fetchAlquiler();
+    fetchRandomAlquileres();
+}, [id, token]);
+
+
+
+
+    
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
-
+    
     if (!alquiler) return (
         <div className="flex justify-center items-center h-screen">
             <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
         </div>
     );
+    
+    
+    console.log(profile?.whatsapp); // This will log 'undefined' instead of throwing an error if profile is null
 
+    
+  
+    
+    // var verdad
+    // console.log(alquiler.titulo)
+    // if(alquiler.user == Profile.id){
+    //     verdad = Profile.username
+    //     console.log(Profile.id)
+    // }
     return (
         <div className="bg-gray-100 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-7xl mx-auto">
@@ -70,6 +103,7 @@ const DetalleAlquiler = () => {
                             className="space-y-6"
                         >
                             <div className="relative aspect-w-16 aspect-h-9">
+                         
                                 <img
                                     className="w-full h-full object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity duration-300"
                                     src={activeImage || "https://via.placeholder.com/600x400"}
@@ -132,17 +166,30 @@ const DetalleAlquiler = () => {
                 <div className="mt-8 bg-white shadow-xl rounded-lg p-6">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4">
-                            {console.log(alquiler.username)}
-                            <img src={alquiler.user_profile_image || "https://via.placeholder.com/50"} alt="User Profile" className="w-12 h-12 rounded-full" />
+                            <Link to={`/profile/${alquiler.username}`}>
+                            <img src={alquiler.user_profile_image || "https://via.placeholder.com/50"} alt="User Profile" className="w-12 h-12 rounded-full" /> 
+                            </Link>
+                            
                             <div>
-                                <h3 className="text-xl font-semibold">{alquiler.user_name}</h3>
-                                <p className="text-gray-600">{alquiler.username}</p>
+                                <Link to={`/profile/${alquiler.username}`}>
+                                <h3 className="text-xl font-semibold">{alquiler.username}</h3>
+                                </Link>
                             </div>
                         </div>
-                        <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 flex items-center">
-                            <FaEnvelope className="mr-2" />
-                            Enviar mensaje
-                        </button>
+                       
+                            {
+                                profile?.whatsapp == '' ? (
+                                    <h1>Numero no detectado</h1>
+                                ) : (
+                                    <a target="_blank" href={`https://wa.me/1111?text=Hola%20me%20interesa%20tu%20local%20me%20gustaria%20saber%20mas`}>
+                                        <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full transition duration-300 flex items-center">
+                                            <FaEnvelope className="mr-2" />
+                                            Enviar mensaje
+                                        </button>
+                                    </a>
+                                )
+                            }
+                        
                     </div>
                 </div>
 

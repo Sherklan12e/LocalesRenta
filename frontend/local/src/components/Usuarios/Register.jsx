@@ -16,7 +16,7 @@ const Register = () => {
         e.preventDefault();
         setIsSubmitting(true);
         try {
-            const response = await axios.post('https://sherklan.pythonanywhere.com/api/register/', {
+            const response = await axios.post('http://127.0.0.1:8000/api/register/', {
                 username,
                 email,
                 password

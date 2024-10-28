@@ -81,7 +81,7 @@ const CrearAlquiler = () => {
         try {
             await apiRequestWithTokenRefresh(async () => {
                 const token = localStorage.getItem('access_token');
-                return axios.post('https://sherklan.pythonanywhere.com/alquiler/alquileres/', data, {
+                return axios.post('http://127.0.0.1:8000/alquiler/alquileres/', data, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         Authorization: `Bearer ${token}`,
@@ -126,7 +126,7 @@ const CrearAlquiler = () => {
                                 value={formData.titulo}
                                 onChange={handleChange}
                                 placeholder="Título atractivo para tu alquiler"
-                                className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200  shadow-sm"
+                                className={`p-3 ${darkMode ? 'bg-color_turquesa10 text-white ' : 'bg-white  text-black'}  border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200  shadow-sm`}
                             />
                         </motion.div>
 
@@ -141,7 +141,7 @@ const CrearAlquiler = () => {
                                 value={formData.descripcion}
                                 onChange={handleChange}
                                 placeholder="Describe tu propiedad"
-                                className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 h-32 resize-none shadow-sm"
+                                className={`p-3 border ${darkMode ? 'bg-color_turquesa10 text-white ' : 'bg-white  text-black'}  border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 h-32 resize-none shadow-sm`}
                             />
                         </motion.div>
 
@@ -157,7 +157,7 @@ const CrearAlquiler = () => {
                                 value={formData.precio}
                                 onChange={handleChange}
                                 placeholder="Precio mensual"
-                                className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-200 shadow-sm"
+                                className={`p-3 border ${darkMode ? 'bg-color_turquesa10 text-white ' : 'bg-white  text-black'}  border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-200 shadow-sm`}
                             />
                         </motion.div>
 
@@ -173,7 +173,7 @@ const CrearAlquiler = () => {
                                 value={formData.ubicacion}
                                 onChange={handleChange}
                                 placeholder="Dirección de la propiedad"
-                                className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-200 shadow-sm"
+                                className={`p-3 border ${darkMode ? 'bg-color_turquesa10 text-white ' : 'bg-white  text-black'}  border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-200 shadow-sm`}
                             />
                         </motion.div>
                         <motion.div whileHover={{ scale: 1.02 }} className="flex flex-col space-y-2">
@@ -188,7 +188,7 @@ const CrearAlquiler = () => {
                                 value={formData.superficie}
                                 onChange={handleChange}
                                 placeholder="Superficie (m²)"
-                                className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                className={`p-2 border border-gray-300 ${darkMode ? 'bg-color_turquesa10 text-white ' : 'bg-white  text-black'}  rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500`}
                             />
                         </motion.div>
                         <motion.div whileHover={{ scale: 1.02 }} className="flex flex-col space-y-2">
@@ -203,7 +203,7 @@ const CrearAlquiler = () => {
                                     value={formData.num_habitaciones}
                                     onChange={handleChange}
                                     placeholder="Número de habitaciones"
-                                    className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                    className={`p-2 border border-gray-300 ${darkMode ? 'bg-color_turquesa10 text-white ' : 'bg-white  text-black'}  rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500`}
                                 />
                             </div>
                         </motion.div>
@@ -219,7 +219,7 @@ const CrearAlquiler = () => {
                                     value={formData.num_banos}
                                     onChange={handleChange}
                                     placeholder="Número de baños"
-                                    className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                    className={`p-2 border ${darkMode ? 'bg-color_turquesa10 text-white ' : 'bg-white  text-black'}  border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500`}
                                 />
                             </div>
                         </motion.div>
@@ -233,7 +233,7 @@ const CrearAlquiler = () => {
                                 value={formData.num_garajes}
                                 onChange={handleChange}
                                 placeholder="Número de garajes"
-                                className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                className={ `p-2 ${darkMode ? 'bg-color_turquesa10 text-white ' : 'bg-white  text-black'}  border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500`}
                             />
                         </motion.div>
                         <motion.div whileHover={{ scale: 1.02 }} className="flex flex-col space-y-2">
@@ -247,7 +247,7 @@ const CrearAlquiler = () => {
                                 value={formData.ano_construccion}
                                 onChange={handleChange}
                                 placeholder="Año de construcción"
-                                className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                className={`p-2 border border-gray-300 ${darkMode ? 'bg-color_turquesa10 text-white ' : 'bg-white  text-black'}  rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500`}
                             />
                         </motion.div>
                         <motion.div whileHover={{ scale: 1.02 }} className="flex flex-col space-y-2">
@@ -259,7 +259,7 @@ const CrearAlquiler = () => {
                                 name="tipo_propiedad"
                                 value={formData.tipo_propiedad}
                                 onChange={handleChange}
-                                className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                className={`p-2 border ${darkMode ? 'bg-color_turquesa10 text-white ' : 'bg-white  text-black'}  border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500`}
                             >
                                 <option value="casa">Casa</option>
                                 <option value="departamento">Departamento</option>
@@ -279,7 +279,7 @@ const CrearAlquiler = () => {
                                 value={formData.country}
                                 onChange={handleChange}
                                 placeholder="País"
-                                className="p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                className={`p-2 border ${darkMode ? 'bg-color_turquesa10 text-white ' : 'bg-white  text-black'}  border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500`}
                             />
                         </motion.div>
 
@@ -401,7 +401,7 @@ const CrearAlquiler = () => {
                         />
                         <label
                             htmlFor="imagenes"
-                            className="cursor-pointer  text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition duration-300"
+                            className="cursor-pointer  bg-white  text-black py-2 px-4 rounded-lg hover:bg-purple-600 transition duration-300"
                         >
                             Seleccionar imágenes
                         </label>
