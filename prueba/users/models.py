@@ -15,7 +15,7 @@ class Post(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(blank=True, null=True)
-    profile_picture = models.ImageField(upload_to='profile_perfil/', default='defaultProfile.jpg', null=True)
+    profile_picture = models.ImageField(upload_to='profile_perfil/', null=True, blank=True)
     location = models.CharField(max_length=100, blank=True, null=True)
     facebook = models.CharField(max_length=100, blank=True, null=True)
     instagram = models.CharField(max_length=100, blank=True, null=True)
@@ -30,16 +30,9 @@ class Profile(models.Model):
         if not self.location:
             self.location = "Argentina"
 
-        default_images = [
-            'profile_perfil/default1.jpg',
-            # 'profile_perfil/default2.jpg',
-            # 'profile_perfil/default3.jpg',
-            # 'profile_perfil/default4.jpg',
-            # 'profile_perfil/default5.jpg',
-        ]
+        # No need for default images list since we're allowing null/blank profile pictures
 
-        if not self.profile_picture or self.profile_picture.name == 'defaultProfile.jpg':
-            self.profile_picture = random.choice(default_images)
+        # Profile picture is optional now
 
         super(Profile, self).save(*args, **kwargs)
 
