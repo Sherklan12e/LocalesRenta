@@ -110,7 +110,7 @@ class RegisterView(generics.CreateAPIView):
                     </tr>
                     <tr>
                         <td style="text-align: center; padding-top: 20px;">
-                            <a href="http://localhost:5173/" style="background-color: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-size: 16px;">
+                            <a href="https://renta1.netlify.app/" style="background-color: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-size: 16px;">
                                 Ir a la plataforma
                             </a>
                         </td>

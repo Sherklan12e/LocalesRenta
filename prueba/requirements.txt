@@ -1,6 +1,7 @@
 asgiref
 gunicorn
 certifi
+psycopg2
 channels
 charset-normalizer
 Django

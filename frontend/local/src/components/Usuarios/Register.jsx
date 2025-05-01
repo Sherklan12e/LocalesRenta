@@ -16,7 +16,7 @@ const Register = () => {
         e.preventDefault();
         setIsSubmitting(true);
         try {
-            const response = await axios.post('http://127.0.0.1:8000/api/register/', {
+            const response = await axios.post('https://fair-francine-davismendoza-08ett12-edf8c0dc.koyeb.app/api/register/', {
                 username,
                 email,
                 password

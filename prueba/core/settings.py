@@ -15,7 +15,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 DEBUG = os.getenv('DEBUG') == 'False'
 
-ALLOWED_HOSTS = ['*','.vercel.app','127.0.0.1','localhost']
+ALLOWED_HOSTS = ['*','.vercel.app','127.0.0.1','localhost','renta1.netlify.app']
 
 # Application definition
 
@@ -56,12 +56,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:5173',
+    'https://renta1.netlify.app/',
 ]
 CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:5173',
-    'http://127.0.0.1:8000',
-    'http://localhost:8000',
+    'https://renta1.netlify.app/',
+    'https://fair-francine-davismendoza-08ett12-edf8c0dc.koyeb.app/',
+    'https://fair-francine-davismendoza-08ett12-edf8c0dc.koyeb.app/',
 ]
 CORS_ALLOW_METHODS = [
     'DELETE',
@@ -114,11 +114,14 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'koyebdb',
+        'USER': 'koyeb-adm',
+        'PASSWORD': 'npg_DKn2PoAtMa8d',
+        'HOST': 'ep-super-sun-a4w6r5uj.us-east-1.pg.koyeb.app',
+        'OPTIONS': {'sslmode': 'require'},
     }
 }
-
 
 # settings.py
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

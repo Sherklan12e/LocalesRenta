@@ -17,7 +17,7 @@ const DetalleAlquiler = () => {
    useEffect(() => {
     const fetchAlquiler = async () => {
         try {
-            const response = await axios.get(`http://127.0.0.1:8000/alquiler/alquileres/${id}/`, {
+            const response = await axios.get(`https://fair-francine-davismendoza-08ett12-edf8c0dc.koyeb.app/alquiler/alquileres/${id}/`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             setAlquiler(response.data);
@@ -35,7 +35,7 @@ const DetalleAlquiler = () => {
 
     const fetchRandomAlquileres = async () => {
         try {
-            const response = await axios.get('http://127.0.0.1:8000/alquiler/alquileres/', {
+            const response = await axios.get('https://fair-francine-davismendoza-08ett12-edf8c0dc.koyeb.app/alquiler/alquileres/', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             setRandomAlquileres(response.data);
@@ -46,7 +46,7 @@ const DetalleAlquiler = () => {
 
     const SitieneWasap = async (username) => {
         try {
-            const response = await axios.get(`http://127.0.0.1:8000/api/profile/${username}`, {
+            const response = await axios.get(`https://fair-francine-davismendoza-08ett12-edf8c0dc.koyeb.app/api/profile/${username}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             setPerfil(response.data);

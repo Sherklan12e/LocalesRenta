@@ -30,7 +30,7 @@ const ListaAlquileres = () => {
         setLoading(true);
         const fetchAlquileres = async () => {
             try {
-                const response = await axios.get('http://127.0.0.1:8000/alquiler/alquileres/view/', {
+                const response = await axios.get('https://fair-francine-davismendoza-08ett12-edf8c0dc.koyeb.app/alquiler/alquileres/view/', {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -51,7 +51,7 @@ const ListaAlquileres = () => {
 
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`http://127.0.0.1:8000/alquiler/alquileres/${id}/`, {
+            await axios.delete(`https://fair-francine-davismendoza-08ett12-edf8c0dc.koyeb.app/alquiler/alquileres/${id}/`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

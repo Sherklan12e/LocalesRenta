@@ -16,7 +16,7 @@ const MainPage = () => {
   useEffect(() => {
     const fetchAlquileres = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/alquiler/alquileres/view/');
+        const response = await axios.get('https://fair-francine-davismendoza-08ett12-edf8c0dc.koyeb.app/alquiler/alquileres/view/');
         setAlquileres(response.data);
       } catch (error) {
         console.error('Error fetching alquileres:', error);

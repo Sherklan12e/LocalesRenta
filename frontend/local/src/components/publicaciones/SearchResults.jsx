@@ -15,7 +15,7 @@ const SearchResults = () => {
         const fetchResults = async () => {
             try {
                 const token = localStorage.getItem('access_token');
-                let url = `http://127.0.0.1:8000/alquiler/search/?q=${query || ''}`;
+                let url = `https://fair-francine-davismendoza-08ett12-edf8c0dc.koyeb.app/alquiler/search/?q=${query || ''}`;
                 if (minPrice) url += `&min_price=${minPrice}`;
                 if (maxPrice) url += `&max_price=${maxPrice}`;
                 if (locationFilter) url += `&location=${locationFilter}`;

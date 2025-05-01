@@ -81,7 +81,7 @@ const CrearAlquiler = () => {
         try {
             await apiRequestWithTokenRefresh(async () => {
                 const token = localStorage.getItem('access_token');
-                return axios.post('http://127.0.0.1:8000/alquiler/alquileres/', data, {
+                return axios.post('https://fair-francine-davismendoza-08ett12-edf8c0dc.koyeb.app/alquiler/alquileres/', data, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         Authorization: `Bearer ${token}`,
