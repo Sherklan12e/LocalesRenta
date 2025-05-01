@@ -1,4 +1,5 @@
 asgiref
+gunicorn
 certifi
 channels
 charset-normalizer
